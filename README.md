@@ -1,1 +1,10 @@
-# Schnitzeljagd
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hallo Welt</title>
+</head>
+<body>
+    <h1>Hallo Welt</h1>
+</body>
+</html>
