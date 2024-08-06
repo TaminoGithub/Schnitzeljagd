@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitel 1: Marry Edge</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: auto;
+            position: relative;
+        }
+        #story-content {
+            max-width: 800px;
+            opacity: 0;
+            transition: opacity 3s;
+            margin-top: 50px;
+        }
+        #story-content.visible {
+            opacity: 1;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        .story-text {
+            font-size: 1.5em;
+            margin: 20px 0;
+        }
+        .hidden {
+            display: none;
+        }
+        .pulse-text {
+            font-size: 1.2em;
+            margin: 20px 0;
+            animation: pulse 1.5s infinite;
+            cursor: pointer;
+        }
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        #gate-image {
+            max-width: 500px;
+            height: auto;
+            opacity: 1;
+            transition: opacity 3s;
+        }
+        .wache1 {
+            color: red;
+            margin: 60px 0;
+        }
+        .wache2 {
+            color: green;
+            margin: 60px 0;
+        }
+        #riddle-box {
+            background-color: black;
+            border: 2px solid #d4af37;
+            padding: 20px;
+            margin: 20px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-line;
+            opacity: 0;
+            transition: opacity 3s;
+        }
+        #riddle-answer {
+            margin-top: 20px; /* Abstand zum Gedicht */
+        }
+        #riddle-answer input {
+            font-size: 1.2em;
+            padding: 10px;
+            border: 2px solid #d4af37;
+            background-color: #fff;
+            color: #000;
+        }
+        #error-message {
+            color: red;
+            font-size: 1.2em;
+            margin: 20px;
+            display: none;
+        }
+        #continue-text-riddle {
+            font-size: 1.2em;
+            margin: 20px;
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <audio id="background-music" autoplay loop>
+        <source src="background-music.mp3" type="audio/mpeg">
+        Ihr Browser unterstützt das Audioelement nicht.
+    </audio>
+    <audio id="riddle-music">
+        <source src="Rätsel.mp3" type="audio/mpeg">
+        Ihr Browser unterstützt das Audioelement nicht.
+    </audio>
+
+    <div id="story-content">
+        <h1>Kapitel 1: Marry Edge</h1>
+        <img id="gate-image" src="Stadttore.png" alt="Stadttore">
+    </div>
+
+    <div id="text-content" class="hidden">
+        <p id="sentence1" class="story-text hidden">Bei der Ankunft unserer Heldin in diesem geheimnisvollen Land gelangt sie an die Tore einer riesigen Stadt.</p>
+        <p id="continue-text1" class="pulse-text hidden">⬇️ Klicke hier, um weiterzulesen ⬇️</p>
+        <p id="sentence2" class="story-text hidden">Oben auf den Toren steht geschrieben 'Marry Edge'.</p>
+        <p id="continue-text2" class="pulse-text hidden">⬇️ Klicke hier, um weiterzulesen ⬇️</p>
+        <p id="sentence3" class="story-text hidden">Unsere Heldin erblickt zwei Wachen in Uniformen vor den Toren.</p>
+        <p id="continue-text3" class="pulse-text hidden">⬇️ Klicke hier, um weiterzulesen ⬇️</p>
+        <p id="sentence4" class="story-text hidden">Womöglich ist es sinnvoll in die Stadt zu gehen, um Informationen über den Schatz in Erfahrung zu bringen.</p>
+        <p id="continue-text4" class="pulse-text hidden">⬇️ Klicke hier, um weiterzulesen ⬇️</p>
+        <p id="sentence5" class="story-text hidden">Unsere Heldin spricht die beiden Wärter an, um Eintritt in die Stadt zu bekommen.</p>
+        <p id="continue-text5" class="pulse-text hidden">⬇️ Klicke hier, um weiterzulesen ⬇️</p>
+    </div>
+
+    <div id="conversation-content" class="hidden">
+        <p id="wache1-1" class="story-text wache1 hidden">Wache 1: ,,Guten Tag junge Dame. Wie lautet das Codewort?"</p>
+        <p id="continue-text6" class="pulse-text hidden">⬇️ Klicke hier, um weiterzulesen ⬇️</p>
+        <p id="vanessa1" class="story-text hidden">Vanessa: ,,Codewort?"</p>
+        <p id="continue-text7" class="pulse-text hidden">⬇️ Klicke hier, um weiterzulesen ⬇️</p>
+        <p id="wache2-1" class="story-text wache2 hidden">Wache 2: ,,Um in die Stadt zu gelangen, brauchst du ein Codewort. Kennst du das Codewort?"</p>
+        <p id="continue-text8" class="pulse-text hidden">⬇️ Klicke hier, um weiterzulesen ⬇️</p>
+        <p id="vanessa2" class="story-text hidden">Vanessa: ,,Nein, aber wie kann ich es erfahren?"</p>
+        <p id="continue-text9" class="pulse-text hidden">⬇️ Klicke hier, um weiterzulesen ⬇️</p>
+        <p id="wache1-2" class="story-text wache1 hidden">Wache 1: ,,Ah ein Fremder also... Naja, um das Passwort zu erfahren, musst du ein Rätsel lösen. Nur wenn du richtig antwortest, gewähren wir dir Einlass."</p>
+        <p id="continue-text10" class="pulse-text hidden">⬇️ Klicke hier, um weiterzulesen ⬇️</p>
+        <p id="vanessa3" class="story-text hidden">Vanessa: ,,Na dann, wie lautet das Rätsel?"</p>
+        <p id="continue-text11" class="pulse-text hidden">⬇️ Klicke hier, um weiterzulesen ⬇️</p>
+        <p id="wache2-2" class="story-text wache2 hidden">Wache 2: ,,Also, gut aufgepasst:"</p>
+    </div>
+
+    <div id="riddle-box" class="hidden">
+        <p>Manche Menschen suchen mich ihr ganzes Leben, aber treffen tun wir uns nie.<br><br>
+        Andere werden von mir überschüttet, jedoch trampeln sie auf mir rum.<br><br>
+        Manchmal zeihe ich die Klugen und Fairen vor, aber eigentlich segne ich alle die mutig genug sind.<br><br>
+        Meine Taten sind meist sanft und süß, aber wenn ich verachtet werde, werd ich zu einer schwer zu besiegenden Bestie.<br><br>
+        Jeder meiner Schläge trifft hart. Wenn ich töte, dann tu ich es langsam.<br><br>
+        Was bin ich?</p>
+    </div>
+
+    <div id="riddle-answer" class="hidden">
+        <p id="continue-text-riddle" class="pulse-text hidden">⬇️ Klicke hier, um weiterzulesen ⬇️</p>
+        <div id="answer-container">
+            <input type="text" id="answer-input" placeholder="Antwort eingeben...">
+            <button id="submit-button">Antwort überprüfen</button>
+        </div>
+        <p id="error-message">Die Antwort ist falsch. Versuche es noch einmal.</p>
+    </div>
+
+    <script>
+        let musicPlayer = document.getElementById('background-music');
+        let riddleMusic = document.getElementById('riddle-music');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('story-content').classList.add('visible');
+                setTimeout(() => {
+                    document.getElementById('text-content').classList.remove('hidden');
+                    showSentence(1);
+                }, 3000);
+            }, 3000);
+        });
+
+        function showSentence(sentenceNumber) {
+            const sentenceId = `sentence${sentenceNumber}`;
+            const sentenceElement = document.getElementById(sentenceId);
+            const continueTextId = `continue-text${sentenceNumber}`;
+            const continueTextElement = document.getElementById(continueTextId);
+
+            if (sentenceElement) {
+                sentenceElement.classList.remove('hidden');
+                if (continueTextElement) {
+                    continueTextElement.classList.remove('hidden');
+                }
+                document.body.addEventListener('click', function handleClick() {
+                    document.body.removeEventListener('click', handleClick);
+                    if (continueTextElement) {
+                        continueTextElement.classList.add('hidden');
+                    }
+                    if (sentenceNumber < 5) {
+                        showSentence(sentenceNumber + 1);
+                    } else {
+                        document.getElementById('conversation-content').classList.remove('hidden');
+                        showConversationPart(1);
+                    }
+                }, { once: true });
+            }
+        }
+
+        function showConversationPart(partNumber) {
+            const conversationParts = [
+                'wache1-1',
+                'vanessa1',
+                'wache2-1',
+                'vanessa2',
+                'wache1-2',
+                'vanessa3',
+                'wache2-2'
+            ];
+            const conversationPartId = conversationParts[partNumber - 1];
+            const conversationPartElement = document.getElementById(conversationPartId);
+            const continueTextId = `continue-text${partNumber + 5}`;
+            const continueTextElement = document.getElementById(continueTextId);
+
+            if (conversationPartElement) {
+                conversationPartElement.classList.remove('hidden');
+                if (continueTextElement) {
+                    continueTextElement.classList.remove('hidden');
+                }
+                document.body.addEventListener('click', function handleClick() {
+                    document.body.removeEventListener('click', handleClick);
+                    if (continueTextElement) {
+                        continueTextElement.classList.add('hidden');
+                    }
+                    if (partNumber < conversationParts.length) {
+                        showConversationPart(partNumber + 1);
+                    } else {
+                        document.getElementById('riddle-box').classList.remove('hidden');
+                        musicPlayer.pause(); // Stop the current background music
+                        riddleMusic.play(); // Play the riddle music
+                        setTimeout(() => {
+                            document.getElementById('riddle-box').style.opacity = 1;
+                            showRiddleAnswerPrompt();
+                        }, 3000);
+                    }
+                }, { once: true });
+            }
+        }
+
+        function showRiddleAnswerPrompt() {
+            document.getElementById('continue-text-riddle').classList.remove('hidden');
+            document.body.addEventListener('click', function handleClick() {
+                document.body.removeEventListener('click', handleClick);
+                document.getElementById('riddle-answer').classList.remove('hidden');
+                document.getElementById('answer-input').focus();
+                document.getElementById('continue-text-riddle').classList.add('hidden');
+            }, { once: true });
+        }
+
+        document.getElementById('submit-button').addEventListener('click', function() {
+            const answerInput = document.getElementById('answer-input');
+            const answer = answerInput.value.trim();
+            const messageElement = document.getElementById('error-message');
+
+            if (answer === 'Liebe') {
+                alert('Rätsel gelöst! Das Gespräch geht weiter.');
+                document.getElementById('riddle-answer').classList.add('hidden');
+                
+                const wache1Continuation = document.createElement('p');
+                wache1Continuation.className = 'story-text wache1';
+                wache1Continuation.textContent = 'Wache 1: ,,Hervorragend, du darfst eintreten."';
+                document.body.appendChild(wache1Continuation);
+
+                const continueText = document.createElement('p');
+                continueText.className = 'pulse-text';
+                continueText.textContent = '⬇️ Klicke hier, um weiterzulesen ⬇️';
+                document.body.appendChild(continueText);
+
+                document.body.addEventListener('click', function handleClick() {
+                    document.body.removeEventListener('click', handleClick);
+                    wache1Continuation.classList.add('hidden');
+                    continueText.classList.add('hidden');
+                    const lastSentence = document.createElement('p');
+                    lastSentence.className = 'story-text';
+                    lastSentence.textContent = 'Die Tore öffnen sich, wenn auch sehr langsam. Unsere Heldin betritt die Stadt Marry Edge.';
+                    document.body.appendChild(lastSentence);
+
+                    const continueTextFinal = document.createElement('p');
+                    continueTextFinal.className = 'pulse-text';
+                    continueTextFinal.textContent = '⬇️ Klicke hier, um weiterzulesen ⬇️';
+                    document.body.appendChild(continueTextFinal);
+
+                    document.body.addEventListener('click', function handleClick() {
+                        document.body.removeEventListener('click', handleClick);
+                        window.location.href = 'Kapitel_1_2.html';
+                    }, { once: true });
+                }, { once: true });
+            } else if (answer.length > 0) {
+                messageElement.classList.remove('hidden');
+            } else {
+                messageElement.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
