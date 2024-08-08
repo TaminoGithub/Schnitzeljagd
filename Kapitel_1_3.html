@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitel 1.4</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: auto;
+        }
+
+        #story-container {
+            max-width: 800px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .dialogue {
+            font-size: 2em;
+            line-height: 2.0;
+            margin-bottom: 3em;
+            white-space: pre-wrap;
+        }
+
+        .vanessa {
+            color: white;
+        }
+
+        .handler {
+            color: white;
+        }
+
+        #click-arrow {
+            font-size: 24px;
+            color: white;
+            margin-top: 20px;
+            animation: pulse 1.5s infinite;
+            display: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="story-container">
+        <div id="dialogue-container"></div>
+        <div id="click-arrow">⬇️ Klicke hier, um weiterzulesen ⬇️</div>
+    </div>
+
+    <audio id="village-audio" src="Village.mp3" loop></audio>
+
+    <script>
+        const dialogue = [
+            { speaker: "Händler", text: "Wow du hast es wirklich gelöst, gut gemacht. Okay zugegeben, das Rätsel war vielleicht etwas fies. Ich mach dir einen Super-Sonderpreis. Für nur 5 Taler erhältst du dein Reisepaket.", className: "handler" },
+            { speaker: "Vanessa", text: "Dankeschön! Schönen Tag noch.", className: "vanessa" },
+            { speaker: "Händler", text: "Kein Problem, Ihnen auch. Und viel Erfolg auf Ihrer Reise!", className: "handler" }
+        ];
+
+        let currentDialogue = 0;
+        const dialogueContainer = document.getElementById('dialogue-container');
+        const clickArrowElement = document.getElementById('click-arrow');
+        const villageAudio = document.getElementById('village-audio');
+
+        function playVillageAudio() {
+            villageAudio.play();
+        }
+
+        function showNextDialogue() {
+            if (currentDialogue < dialogue.length) {
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', dialogue[currentDialogue].className);
+                let speakerName = dialogue[currentDialogue].speaker;
+                dialogueElement.innerHTML = `<strong>${speakerName}:</strong> ${dialogue[currentDialogue].text}`;
+                dialogueContainer.appendChild(dialogueElement);
+                currentDialogue++;
+                clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+            } else {
+                clickArrowElement.style.display = 'none';
+            }
+        }
+
+        // Zeige den ersten Dialog initial an und spiele die Hintergrundmusik ab
+        showNextDialogue();
+        playVillageAudio();
+
+        // Höre auf Klicks im gesamten Dokument
+        document.addEventListener('click', () => {
+            clickArrowElement.style.display = 'none';
+            showNextDialogue();
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
