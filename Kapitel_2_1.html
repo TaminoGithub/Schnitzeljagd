@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitel 2: Wälder der Einheit</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: auto;
+            position: relative;
+        }
+
+        #chapter-title {
+            font-size: 3.5em;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 3s ease-in-out;
+            margin-top: 50px;
+        }
+
+        #image-container {
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 3s ease-in-out;
+        }
+
+        #image-container img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .story-text {
+            font-size: 1.8em;
+            margin: 40px 20px 20px 20px; /* Abstand zum Rand */
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chapter-title">Kapitel 2: Wälder der Einheit</div>
+    <div id="image-container">
+        <img src="Wald.png" alt="Wald">
+    </div>
+
+    <audio id="background-music" autoplay loop>
+        <source src="Wald.mp3" type="audio/mpeg">
+        Ihr Browser unterstützt das Audioelement nicht.
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chapterTitle = document.getElementById('chapter-title');
+            const imageContainer = document.getElementById('image-container');
+            
+            // Einblenden der Überschrift und des Bildes
+            chapterTitle.style.opacity = 1;
+            setTimeout(() => {
+                imageContainer.style.opacity = 1;
+            }, 3000);
+
+            let clickCount = 0;
+            const body = document.body;
+
+            body.addEventListener('click', () => {
+                clickCount++;
+                if (clickCount === 1) {
+                    addText("Wächter: \"Ausgezeichnet! Es befinden sich mindestens drei Personen im Garten. Wenn zwei Detektive miteinander verheiratet sind und der dritte Detektiv zum Beispiel ihr Schwiegersohn ist, sind alle Anforderungen erfüllt. Die verheirateten Detektive haben dann auch eine Urenkelin im Garten. Na gut, dann will ich dich nicht länger nerven, du darfst durch.\"");
+                } else if (clickCount === 2) {
+                    addText("Vanessa: \"Danke (Na endlich)\"");
+                } else if (clickCount === 3) {
+                    addText("Unsere Heldin durchtritt das Tor und verlässt damit die Stadt Marry Edge. Die Reise zum Schatz beginnt nun ganz offiziell. Und die bevorstehenden Herausforderungen werden noch viel spannender und fordernder als es sich unsere Heldin ausmalen kann.");
+                }
+            });
+
+            function addText(text) {
+                const storyTextElement = document.createElement('div');
+                storyTextElement.classList.add('story-text');
+                storyTextElement.textContent = text;
+                document.body.appendChild(storyTextElement);
+                setTimeout(() => {
+                    storyTextElement.style.opacity = 1;
+                }, 10); // Kurzer Delay für den Übergang
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schatzsuche Geschichte</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            overflow: auto; /* Ermöglicht das Scrollen */
+        }
+        #story-container {
+            max-width: 800px;
+            margin-top: 20px; /* Etwas Abstand nach oben, falls benötigt */
+            overflow: hidden;
+        }
+        #story-text {
+            font-size: 2em;
+            line-height: 1.6;
+        }
+        #click-arrow, #next-chapter {
+            font-size: 24px;
+            color: white;
+            margin-top: 20px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="story-container">
+        <p id="story-text"></p>
+        <div id="click-arrow">⬇️ Klicke hier, um weiterzulesen ⬇️</div>
+        <div id="next-chapter" style="display:none;">⬇️ Weiter zu Kapitel 1 ⬇️</div>
+    </div>
+
+    <script>
+        const storyText = [
+            "Einst existierte in einem weit entfernten Land ein Schatz, dessen Inhalt seit Jahrhunderten ein Geheimnis war.",
+            "Einige mutige Abenteurer begaben sich auf die Suche nach dem Schatz, jedoch kehrte nie jemand von der Reise zurück.",
+            "Der Schatz blieb ein Mythos, an den einige glaubten, andere wiederum nicht.",
+            "Eines Tages jedoch erreichte eine schicksalhafte Heldin namens Vanessa das Land, die dem Mythos auf die Spur gehen wollte.",
+            "Was sie jedoch noch nicht wusste, war, dass diese Reise für sie so einiges bereit halten würde."
+        ];
+
+        let currentSentence = 0;
+        const storyTextElement = document.getElementById('story-text');
+        const clickArrowElement = document.getElementById('click-arrow');
+        const nextChapterElement = document.getElementById('next-chapter');
+
+        function showNextSentence() {
+            if (currentSentence < storyText.length) {
+                storyTextElement.innerText += storyText[currentSentence] + " ";
+                currentSentence++;
+                if (currentSentence === storyText.length) {
+                    // Center the text vertically in the middle after the last sentence
+                    document.body.style.justifyContent = 'flex-start'; // Ändere dies, um das Scrollen zu ermöglichen
+                    clickArrowElement.style.display = 'none';
+                    nextChapterElement.style.display = 'block';
+                }
+            } else {
+                window.location.href = 'Kapitel_1.html'; // Redirect to the next chapter
+            }
+        }
+
+        // Show the first sentence initially
+        showNextSentence();
+
+        // Listen for clicks on the whole body
+        document.body.addEventListener('click', showNextSentence);
+    </script>
+</body>
+</html>

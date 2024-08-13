@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schatzsuche Geschichte</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: auto;
+        }
+
+        #story-container {
+            max-width: 800px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        #story-text,
+        #post-image-sentence,
+        #new-text {
+            font-size: 2em;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            margin-bottom: 20px;
+        }
+
+        .dialogue {
+            font-size: 1.5em;
+            line-height: 1.6;
+            margin-bottom: 3em;
+            white-space: pre-wrap;
+        }
+
+        .vanessa {
+            color: white;
+        }
+
+        .handler {
+            color: white;
+        }
+
+        .armor-seller {
+            color: yellow;
+        }
+
+        .image {
+            width: 100%;
+            max-width: 800px;
+            display: none;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 2s;
+            align-self: center;
+        }
+
+        #click-arrow {
+            font-size: 24px;
+            color: white;
+            margin-top: 20px;
+            animation: pulse 1.5s infinite;
+            display: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #large-text {
+            font-size: 5em;
+            display: none;
+            background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        #riddle-text {
+            font-size: 2em;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            margin-top: 20px;
+            color: lightgray;
+        }
+
+        #answer-input {
+            font-size: 1.5em;
+            margin-top: 20px;
+            padding: 10px;
+            width: 300px;
+        }
+
+        #submit-button {
+            font-size: 1.5em;
+            padding: 10px 20px;
+            margin-top: 20px;
+        }
+
+        #feedback {
+            font-size: 2em;
+            margin-top: 20px;
+        }
+
+        .correct {
+            color: white;
+        }
+
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="story-container">
+        <div id="story-text"></div>
+        <div id="dialogue-container"></div>
+        <div id="new-text"></div>
+        <div id="riddle-text"></div>
+        <input type="text" id="answer-input" style="display:none;" placeholder="Deine Antwort hier">
+        <button id="submit-button" style="display:none;">Enter</button>
+        <div id="feedback"></div>
+        <div id="click-arrow">⬇️ Klicke hier, um weiterzulesen ⬇️</div>
+    </div>
+
+    <audio id="village-audio" src="Village.mp3" loop></audio>
+    <audio id="riddle-audio" src="Rätsel.mp3" loop></audio>
+
+    <script>
+        const storyText = [
+            "Unsere Heldin betritt wieder den nun etwas ausgedünnteren Markt von Marry Edge. 3 Besorgungen stehen ihr noch bevor: Eine Rüstung, Waffe und ausreichend Proviant.",
+            "Das erste was ihr ins Auge sticht ist der große Lebensmittelhandel, welcher auch gut besucht ist. Allerdings sind die Preise relativ hoch.",
+            "Unsere Heldin spricht den Händler an in der Hoffnung eventuell einen Sonderpreis rauszuhandeln."
+        ];
+
+        const dialogue = [
+            { speaker: "Händler", text: "Hallöchen, kann ich Ihnen weiter helfen?", className: "handler" },
+            { speaker: "Vanessa", text: "Hallo, ja das können Sie. Ich benötige Proviant für eine große Reise, hab allerdings nicht besonders viel Geld dabei. Könnten Sie mir eventuell ein Angebot machen?", className: "vanessa" },
+            { speaker: "Händler", text: "Mhm lass mich mal überlegen... Okay folgender Vorschlag: Du kriegst ein vollständiges Rundum-Sorglos Reisepaket für einen fairen Preis, aber dafür musst du mein Rätsel lösen. Einverstanden?", className: "handler" },
+            { speaker: "Vanessa", text: "(Der Barkeeper hat wohl nicht gelogen mit den Rätseln) Okay einverstanden.", className: "vanessa" },
+            { speaker: "Händler", text: "Super, dann gehts jetzt los:", className: "handler" }
+        ];
+
+        const riddleText = `
+Ich habe 16 rote Äpfel, 5 Milchpackungen und 9 Käseblöcke. Ich verkaufe zusätzlich grüne Äpfel, Wurst, Salz, Pfeffer, Brot, Eier, Zwiebeln und Nüsse. Dein Ziel ist die Anzahl an Exemplaren von allen Produkten die ich habe herauszufinden und am Ende alle miteinander zu multiplizieren um auf das Ergebnis zu kommen. Hier sind deine Tipps:
+
+1. Die Anzahl der roten Äpfel, der Milchpackungen und der Käseblöcke addieren sich auf die Anzahl der Zwiebeln, die ich verkaufe.
+2. Von 2 Produkten verkaufe ich gleich viele Exemplare. Eins der beiden Produkte ist Wurst.
+3. Die Anzahl der Eier die ich verkaufe ist gerade und die der Nüsse und Wurst ist ungerade.
+4. Die Anzahl der Exemplare meines beliebtesten Produktes ist das dreifache der Anzahl des Produktes von dessen Anzahl ich am wenigsten habe.
+5. Mein beliebtestes Produkt ist nicht roter Apfel, grüner Apfel, Milch, Käse, Wurst oder Salz.
+6. Die Anzahl der Exemplare des Produktes von denen ich am meisten Exemplare hab hat ausschließlich identische Ziffern (also eine Schnapszahl).
+7. Die Anzahl der Exemplare meines beliebtesten Produktes ist gerade.
+8. Die Anzahl der Exemplare des Pfeffers ist größer als die Anzahl an roten Äpfeln die ich habe.
+9. Die Anzahl an Nüssen die ich verkaufe liegt zwischen der Anzahl an Zwiebeln und grünen Äpfeln die ich verkaufe.
+10. Die Anzahl der Exemplare des Produktes von denen ich am meisten Exemplare habe ist nicht grüner Apfel, Wurst, Pfeffer oder Salz.
+11. Die Anzahl der Exemplare die ich von Brot habe ist geringer als die Anzahl von Zwiebeln.
+12. Das Produkt von dem ich am wenigsten habe sind nicht Nüsse, Pfeffer oder grüner Apfel.
+13. Die Anzahl der Exemplare des Produktes von denen ich am meisten Exemplare habe ist geringer als das doppelte der Anzahl an Zwiebeln die ich habe.
+14. Die Anzahl der Exemplare des Produktes von denen ich am wenigsten Exemplare habe ist ein Vielfaches von 2, aber nicht gleich 2.
+15. Subtrahiert man die Anzahl an Exemplaren meines beliebtesten Produktes und die Exemplare meines Produktes von dem ich am wenigsten Exemplare habe von der Anzahl an Eiern die ich verkaufe, erhält man die Anzahl an grünen Äpfeln, die ich verkaufe.
+16. Die Anzahl an Wurstexemplaren die ich verkaufe entspricht der Zahl, die man erhält wenn man die Anzahl an Broten von der Anzahl an Nüssen subtrahiert.
+
+Mit diesen Tipps sollte es dir gelingen die Anzahl an Exemplaren aller meiner Produkte zu ermitteln. Für das Ausrechnen der finalen Zahl kannst du natürlich gerne den Taschenrechner auf deinem Kommunikationsgerät verwenden. Also wie lautet deine Antwort?
+`;
+
+        const newStoryText = [
+            { speaker: "Vanessa", text: "Dankeschön! Schönen Tag noch.", className: "vanessa" },
+            { speaker: "Händler", text: "Kein Problem, Ihnen auch. Und viel Erfolg auf Ihrer Reise!", className: "handler" }
+        ];
+
+        let currentSentence = 0;
+        let currentDialogue = 0;
+        let currentNewStory = 0;
+        let dialogueStarted = false;
+        let newStoryStarted = false;
+        const storyTextElement = document.getElementById('story-text');
+        const dialogueContainer = document.getElementById('dialogue-container');
+        const clickArrowElement = document.getElementById('click-arrow');
+        const riddleTextElement = document.getElementById('riddle-text');
+        const answerInput = document.getElementById('answer-input');
+        const submitButton = document.getElementById('submit-button');
+        const feedbackElement = document.getElementById('feedback');
+        const villageAudio = document.getElementById('village-audio');
+        const riddleAudio = document.getElementById('riddle-audio');
+
+        function playVillageAudio() {
+            villageAudio.play();
+            riddleAudio.pause();
+            riddleAudio.currentTime = 0;
+        }
+
+        function playRiddleAudio() {
+            riddleAudio.play();
+            villageAudio.pause();
+            villageAudio.currentTime = 0;
+        }
+
+        function stopRiddleAudio() {
+            riddleAudio.pause();
+            riddleAudio.currentTime = 0;
+        }
+
+        function showNextSentence() {
+            if (currentSentence < storyText.length) {
+                // Zeige die bisherigen Sätze an
+                storyTextElement.innerText += storyText[currentSentence] + "\n\n";
+                currentSentence++;
+                clickArrowElement.style.display = 'block';
+            } else if (!dialogueStarted) {
+                // Starte den Dialog
+                dialogueStarted = true;
+                showNextDialogue();
+            } else {
+                clickArrowElement.style.display = 'none';
+            }
+        }
+
+        function showNextDialogue() {
+            if (currentDialogue < dialogue.length) {
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', dialogue[currentDialogue].className);
+                let speakerName = dialogue[currentDialogue].speaker;
+                dialogueElement.innerHTML = `<strong>${speakerName}:</strong> ${dialogue[currentDialogue].text}`;
+                dialogueContainer.appendChild(dialogueElement);
+                currentDialogue++;
+                clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+            } else {
+                dialogueStarted = false;
+                // Starte das Rätsel
+                playRiddleAudio();
+                riddleTextElement.innerText = riddleText;
+                answerInput.style.display = 'block';
+                submitButton.style.display = 'block';
+                clickArrowElement.style.display = 'none';
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = answerInput.value.trim();
+            if (userAnswer === "10705366425600") {
+                feedbackElement.className = "dialogue correct";
+                feedbackElement.innerText = "Richtige Antwort! Du wirst jetzt weitergeleitet...";
+                stopRiddleAudio();
+                answerInput.style.display = 'none';
+                submitButton.style.display = 'none';
+                clickArrowElement.style.display = 'none';
+                setTimeout(() => {
+                    window.location.href = "Kapitel_1_4.html";
+                }, 3000);
+            } else {
+                feedbackElement.className = "dialogue incorrect";
+                feedbackElement.innerText = "Falsche Antwort";
+            }
+        }
+
+        // Zeige den ersten Satz initial an und spiele die Hintergrundmusik ab
+        showNextSentence();
+        playVillageAudio();
+
+        // Höre auf Klicks im gesamten Dokument
+        document.addEventListener('click', () => {
+            clickArrowElement.style.display = 'none';
+            if (!dialogueStarted && !newStoryStarted) {
+                showNextSentence();
+            } else if (dialogueStarted) {
+                showNextDialogue();
+            } else if (newStoryStarted) {
+                showNextNewStory();
+            }
+        });
+
+        // Überprüfe die Antwort, wenn der Benutzer auf den Button klickt
+        submitButton.addEventListener('click', checkAnswer);
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+

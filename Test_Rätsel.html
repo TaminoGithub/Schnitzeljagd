@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passwort überprüfen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: black;
+            color: white;
+            text-align: center;
+        }
+        #container {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        #answer-input {
+            font-size: 1.2em;
+            padding: 10px;
+            border: 2px solid #d4af37;
+            background-color: #fff;
+            color: #000;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 10px;
+        }
+        #submit-button {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #d4af37;
+            color: black;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+        }
+        #submit-button:hover {
+            background-color: #b89427;
+        }
+        #message {
+            font-size: 1.2em;
+            margin-top: 10px;
+            display: none;
+        }
+        #message.correct {
+            color: green;
+        }
+        #message.incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <input type="text" id="answer-input" placeholder="Gib hier deine Antwort ein..." />
+        <button id="submit-button">Enter</button>
+        <p id="message" class="hidden"></p>
+    </div>
+
+    <script>
+        document.getElementById('submit-button').addEventListener('click', function() {
+            const answerInput = document.getElementById('answer-input');
+            const answer = answerInput.value.trim();
+            const messageElement = document.getElementById('message');
+
+            if (answer === 'Liebe') {
+                messageElement.textContent = 'Richtiges Passwort';
+                messageElement.className = 'correct';
+            } else if (answer.length > 0) {
+                messageElement.textContent = 'Falsches Passwort';
+                messageElement.className = 'incorrect';
+            } else {
+                messageElement.textContent = '';
+                messageElement.className = 'hidden';
+            }
+
+            messageElement.style.display = answer.length > 0 ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>
+

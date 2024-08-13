@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitel 1.5</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            overflow: auto;
+        }
+
+        #story-container {
+            max-width: 800px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .dialogue {
+            font-size: 2em;
+            line-height: 2.0;
+            margin-bottom: 3em;
+            white-space: pre-wrap;
+        }
+
+        .vanessa {
+            color: white;
+        }
+
+        .mysterious {
+            color: darkviolet;
+        }
+
+        .receptionist {
+            color: white;
+        }
+
+        .story-text {
+            font-size: 2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+        }
+
+        #click-arrow {
+            font-size: 24px;
+            color: white;
+            margin-top: 20px;
+            animation: pulse 1.5s infinite;
+            display: none;
+        }
+
+        .image {
+            position: fixed;
+            top: 10%;
+            left: 5%;
+            width: 350px;
+            display: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="village-audio" src="Village.mp3" loop></audio>
+    <audio id="bar-audio" src="Bar.mp3" loop></audio>
+
+    <img id="inn-image" class="image" src="Gasthof.png" alt="Gasthof">
+    <img id="alistor-image" class="image" src="Alistor.png" alt="Alistor">
+    <div id="story-container">
+        <div id="dialogue-container"></div>
+        <div id="story-text"></div>
+        <div id="receptionist-dialogue-container"></div>
+        <div id="next-story-container"></div>
+        <div id="click-arrow">⬇️ Klicke hier, um weiterzulesen ⬇️</div>
+    </div>
+
+    <script>
+        const dialogue = [
+            { speaker: "Vanessa", text: "Vielen Dank, und ich werde auf jeden Fall aufpassen. Hier sind noch 5 Taler. Mach's gut!", className: "vanessa" },
+            { speaker: "???", text: "Leb wohl.", className: "mysterious" }
+        ];
+
+        const storyText = [
+            "Unsere Heldin hat nun alles erworben, was sie für ihre Reise benötigt, auch wenn ihr Kontostand jetzt 0 Taler beträgt.",
+            "Es ist mittlerweile dunkel und der Markt ist vollständig leer.",
+            "Aufgrund ihrer finanziellen Lage kann unsere Heldin sich jedoch kein Schlafgemach mehr leisten.",
+            "Sie entscheidet sich dennoch Ausschau nach einem Schlafplatz zu halten und folgt der Gasse, welche weiter ans andere Ende der Stadt führt.",
+            "Nach einiger Zeit läuft sie an einem Gebäude lang mit der Aufschrift: 'Gasthof Zur Nachteule - Restaurant und Pension'.",
+            "Unsere Heldin versucht ihr Glück.",
+            "Angekommen im Gasthof erspäht sie eine Dame an der Rezeption."
+        ];
+
+        const receptionistDialogue = [
+            { speaker: "Rezeptionistin", text: "Oh, zu so später Stunde noch Kundschaft. Was kann ich für Sie tun?", className: "receptionist" },
+            { speaker: "Vanessa", text: "Guten Abend, ich suche noch ein Platz zum Schlafen heute Nacht, allerdings hab ich überhaupt kein Geld mehr. Habt ihr vielleicht trotzdem ein Zimmer frei?", className: "vanessa" },
+            { speaker: "Rezeptionistin", text: "Puh, viel ist wirklich nicht mehr übrig. Höchstens die alte Besenkammer im 1. Stock. Wobei da auch gut und gerne einige Ratten vorbeischauen. Mehr kann ich Ihnen nicht anbieten.", className: "receptionist" },
+            { speaker: "Vanessa", text: "Das ist in Ordnung, ich nehm die Kammer.", className: "vanessa" },
+            { speaker: "Rezeptionistin", text: "Wie Sie meinen, hier ist der Schlüssel. Morgen früh um 7 müssen Sie raus. Schlafen Sie schön.", className: "receptionist" },
+            { speaker: "Vanessa", text: "Vielen Dank, und auch danke vielmals für das Zimmer. Ihnen auch eine gute Nacht.", className: "vanessa" }
+        ];
+
+        const nextStoryText = [
+            "Unsere Heldin nimmt die Treppe in den 1. Stock und sucht die Besenkammer.",
+            "Es ist schon so spät, dass vermutlich alle anderen im Gasthof schlafen, deswegen ist Sie lieber ruhig.",
+            "Was allerdings nicht so leicht ist mit dem ständigen Knarksen vom Boden bei jedem Schritt.",
+            "Am Ende des Flurs kommt unsere Heldin in der Besenkammer an. Sie nimmt den Schlüssel und öffnet die Tür.",
+            "Sie kommt in einen gerade mal 4m² großen Raum mit einer alten Matratze auf dem Boden.",
+            "Unsere Heldin legt ihre Ausrüstung vorsichtig ab und setzt sich auf die Matratze, bereit jeden Augenblick einzunicken nach diesem anstrengenden Tag.",
+            "Plötzlich hört sie ein lauten Knall vom Nachbarzimmer aus.",
+            "Anschließend eine Stimme, die sagt: \"Verdammt! Wär ich das Zeug doch nur losgeworden\".",
+            "Die Besenkammer scheint wohl sehr hellhörig zu sein.",
+            "Unsere Heldin legt sich nun vollständig auf die Matratze und zieht die Bettdecke über ihren Körper.",
+            "Wärmt nicht besonders, aber das muss jetzt ausreichen.",
+            "Kurz bevor Sie ihre Augen schließen will, erkennt Sie, dass an der Decke etwas geschrieben steht:",
+            "'Das Codewort ist Rasuman'",
+            "An einer anderen Stelle steht geschrieben:",
+            "'Lang lebe König Alistor'",
+            "Darunter ist ein Plakat mit Bild besagter Person, allerdings sind die Augen durchgestrichen."
+        ];
+
+        const innerMonologue = [
+            "Vanessa: \"Was bedeutet das alles? Was für ein Codewort? Und wofür? Und wer ist dieser Alistor? Ich bin verwirrt. Am besten ich geh einfach schlafen.\""
+        ];
+
+        let currentDialogue = 0;
+        let currentStoryText = 0;
+        let currentReceptionistDialogue = 0;
+        let currentNextStoryText = 0;
+        let currentInnerMonologue = 0;
+        const dialogueContainer = document.getElementById('dialogue-container');
+        const storyTextContainer = document.getElementById('story-text');
+        const receptionistDialogueContainer = document.getElementById('receptionist-dialogue-container');
+        const nextStoryTextContainer = document.getElementById('next-story-container');
+        const innImage = document.getElementById('inn-image');
+        const alistorImage = document.getElementById('alistor-image');
+        const villageAudio = document.getElementById('village-audio');
+        const barAudio = document.getElementById('bar-audio');
+        const clickArrowElement = document.getElementById('click-arrow');
+        let imageShown = false;
+        let alistorImageShown = false;
+
+        function playVillageAudio() {
+            villageAudio.play();
+        }
+
+        function playBarAudio() {
+            barAudio.play();
+            villageAudio.pause();
+            villageAudio.currentTime = 0;
+        }
+
+        function stopBarAudio() {
+            barAudio.pause();
+            barAudio.currentTime = 0;
+        }
+
+        function showNextDialogue() {
+            if (currentDialogue < dialogue.length) {
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', dialogue[currentDialogue].className);
+                let speakerName = dialogue[currentDialogue].speaker;
+                dialogueElement.innerHTML = `<strong>${speakerName}:</strong> ${dialogue[currentDialogue].text}`;
+                dialogueContainer.appendChild(dialogueElement);
+                currentDialogue++;
+                clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+            } else {
+                showNextStoryText();
+            }
+        }
+
+        function showNextStoryText() {
+            if (currentStoryText < storyText.length) {
+                const storyTextElement = document.createElement('div');
+                storyTextElement.classList.add('story-text');
+                storyTextElement.innerText = storyText[currentStoryText];
+                storyTextContainer.appendChild(storyTextElement);
+                currentStoryText++;
+                clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+
+                // Gasthof-Bild einblenden und Musik wechseln, wenn der entsprechende Text angezeigt wird
+                if (storyText[currentStoryText - 1] === "Angekommen im Gasthof erspäht sie eine Dame an der Rezeption.") {
+                    innImage.style.display = 'block';
+                    playBarAudio();
+                }
+            } else if (currentStoryText === storyText.length) {
+                showNextReceptionistDialogue();
+            }
+        }
+
+        function showNextReceptionistDialogue() {
+            if (currentReceptionistDialogue < receptionistDialogue.length) {
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', receptionistDialogue[currentReceptionistDialogue].className);
+                let speakerName = receptionistDialogue[currentReceptionistDialogue].speaker;
+                dialogueElement.innerHTML = `<strong>${speakerName}:</strong> ${receptionistDialogue[currentReceptionistDialogue].text}`;
+                receptionistDialogueContainer.appendChild(dialogueElement);
+                currentReceptionistDialogue++;
+                clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+            } else {
+                innImage.style.display = 'none'; // Gasthof-Bild ausblenden
+                showNextText();
+            }
+        }
+
+        function showNextText() {
+            if (currentNextStoryText < nextStoryText.length) {
+                const nextTextElement = document.createElement('div');
+                nextTextElement.classList.add('story-text');
+                nextTextElement.innerText = nextStoryText[currentNextStoryText];
+                nextStoryTextContainer.appendChild(nextTextElement);
+                currentNextStoryText++;
+
+                // Alistor-Bild einblenden und Musik stoppen, wenn der entsprechende Text angezeigt wird
+                if (nextStoryText[currentNextStoryText - 1] === "Darunter ist ein Plakat mit Bild besagter Person, allerdings sind die Augen durchgestrichen.") {
+                    alistorImage.style.display = 'block';
+                } else if (nextStoryText[currentNextStoryText - 1] === "Sie kommt in einen gerade mal 4m² großen Raum mit einer alten Matratze auf dem Boden.") {
+                    stopBarAudio();
+                }
+
+                clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+            } else {
+                showInnerMonologue();
+            }
+        }
+
+        function showInnerMonologue() {
+            if (currentInnerMonologue < innerMonologue.length) {
+                const innerMonologueElement = document.createElement('div');
+                innerMonologueElement.classList.add('story-text');
+                innerMonologueElement.innerText = innerMonologue[currentInnerMonologue];
+                nextStoryTextContainer.appendChild(innerMonologueElement);
+                currentInnerMonologue++;
+                clickArrowElement.style.display = 'block';
+            } else {
+                clickArrowElement.style.display = 'none';
+                setTimeout(() => {
+                    window.location.href = "Kapitel_1_6.html"; // Weiterleitung zur nächsten Seite
+                }, 2000); // 2 Sekunden Verzögerung bevor zur nächsten Seite gewechselt wird
+            }
+        }
+
+        // Starte den Dialog und die Musik
+        showNextDialogue();
+        playVillageAudio();
+
+        // Höre auf Klicks im gesamten Dokument
+        document.addEventListener('click', () => {
+            clickArrowElement.style.display = 'none';
+            if (currentDialogue < dialogue.length) {
+                showNextDialogue();
+            } else if (currentStoryText < storyText.length) {
+                showNextStoryText();
+            } else if (currentReceptionistDialogue < receptionistDialogue.length) {
+                showNextReceptionistDialogue();
+            } else if (currentNextStoryText < nextStoryText.length) {
+                showNextText();
+            } else {
+                showInnerMonologue();
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

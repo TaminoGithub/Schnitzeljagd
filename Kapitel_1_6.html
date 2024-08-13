@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitel 1.6</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            overflow: auto;
+        }
+
+        #story-container {
+            max-width: 800px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .story-text,
+        .dialogue {
+            font-size: 2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+        }
+
+        .dialogue {
+            margin-bottom: 3em;
+        }
+
+        .vanessa {
+            color: white;
+        }
+
+        .guard {
+            color: white;
+        }
+
+        #click-arrow {
+            font-size: 24px;
+            color: white;
+            margin-top: 20px;
+            animation: pulse 1.5s infinite;
+            display: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Hintergrundmusik -->
+    <audio id="background-music" loop autoplay>
+        <source src="Village.mp3" type="audio/mpeg">
+        Ihr Browser unterstützt das Audioelement nicht.
+    </audio>
+
+    <div id="story-container">
+        <div id="story-text"></div>
+        <div id="dialogue-container"></div>
+        <div id="click-arrow">⬇️ Klicke hier, um weiterzulesen ⬇️</div>
+    </div>
+
+    <script>
+        const storyText = [
+            "Am Morgen des nächsten Tages wird unsere Heldin von den lauten Geräuschen im Nachbarzimmer geweckt. Verschlafen probiert Sie sich nochmal hinzulegen, allerdings kann Sie nicht einschlafen.",
+            "Unsere Heldin ist zu aufgeregt auf den Start ihres Abenteuers. Am besten Sie macht sich auch schon mal fertig, bevor es zu schwer wird sich durch die Menschenmengen der Stadt zu kämpfen.",
+            "Sie zieht ihre Rüstung an und beobachtet ihre Waffe, welche Sie von dem mysteriösen Händler mit dem Umhang hat. Es scheint ein magisches Schwert zu sein, aber wie funktioniert das mit der Magie?",
+            "Unsere Heldin wird es bestimmt noch herausfinden. Nach einer kleinen Mahlzeit verlässt unsere Heldin ihr Zimmer und läuft wieder runter zur Rezeption.",
+            "Sie bedankt sich nochmal herzlich für den Schlafplatz und geht dann zur Tür raus. Nun heißt es die Stadt im Norden zu verlassen und den Wald der Einheit zu betreten.",
+            "Zwar freut sich unsere Heldin darauf, dass es nun endlich richtig losgeht, jedoch hat Sie auch Respekt vor den Kreaturen, die sich außerhalb der Stadt befinden.",
+            "Jetzt gibt es kein Zurück mehr. Es dauert ewig bis unsere Heldin am anderen Ende der Stadt ankommt.",
+            "Wie zu erwarten befindet sich auch auf dieser Seite der Stadt eine großes Eingangstor mit 2 Wachtürmen. Aber wo sind die Wachen?",
+            "Unsere Heldin untersucht das Tor und die Wachtürme etwas genauer. Es gibt ein kleines Wachhaus, worin ein Wächter drin sitzt.",
+            "Er scheint nicht sonderlich aufmerksam zu sein. Unsere Heldin entscheidet sich ihn anzusprechen:"
+        ];
+
+        const dialogue = [
+            { speaker: "Vanessa", text: "Entschuldigung, ich möchte die Stadt verlassen, könnten Sie das Tor öffnen?", className: "vanessa" },
+            { speaker: "Wächter", text: "....", className: "guard" },
+            { speaker: "Vanessa", text: "Hallo? Können Sie mich hören?", className: "vanessa" },
+            { speaker: "Wächter", text: "...", className: "guard" },
+            { speaker: "Vanessa", text: "HAAALLOOOO!!!", className: "vanessa" },
+            { speaker: "Wächter", text: "Ja Moment ich muss nachdenken!", className: "guard" },
+            { speaker: "Vanessa", text: "Worüber denn?", className: "vanessa" },
+            { speaker: "Wächter", text: "... Mhm... Schwermetall... 4 Buchstaben... B _ _ I...", className: "guard" },
+            { speaker: "Vanessa", text: "Ah, ein Kreuzworträtsel also?", className: "vanessa" },
+            { speaker: "Wächter", text: "Wonach sieht's denn aus?", className: "guard" },
+            { speaker: "Vanessa", text: "Mhm sehr höflich... Lassen Sie mich durch, wenn ich Ihnen helfe?", className: "vanessa" },
+            { speaker: "Wächter", text: "Je eher ich fertig bin, desto schneller kommen Sie hier durch.", className: "guard" },
+            { speaker: "Vanessa", text: "Okay, weil ich glaub ich weiß die Antwort auf das erste Wort:", className: "vanessa" }
+        ];
+
+        let currentStoryText = 0;
+        let currentDialogue = 0;
+        const storyTextContainer = document.getElementById('story-text');
+        const dialogueContainer = document.getElementById('dialogue-container');
+        const clickArrowElement = document.getElementById('click-arrow');
+
+        function showNextStoryText() {
+            if (currentStoryText < storyText.length) {
+                const storyTextElement = document.createElement('div');
+                storyTextElement.classList.add('story-text');
+                storyTextElement.innerText = storyText[currentStoryText];
+                storyTextContainer.appendChild(storyTextElement);
+                currentStoryText++;
+                clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+            } else {
+                showNextDialogue();
+            }
+        }
+
+        function showNextDialogue() {
+            if (currentDialogue < dialogue.length) {
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', dialogue[currentDialogue].className);
+                let speakerName = dialogue[currentDialogue].speaker;
+                dialogueElement.innerHTML = `<strong>${speakerName}:</strong> ${dialogue[currentDialogue].text}`;
+                dialogueContainer.appendChild(dialogueElement);
+                currentDialogue++;
+                clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+            } else {
+                clickArrowElement.style.display = 'block'; // Allow user to click to proceed
+            }
+        }
+
+        // Starte den Text
+        showNextStoryText();
+
+        // Höre auf Klicks im gesamten Dokument
+        document.addEventListener('click', () => {
+            clickArrowElement.style.display = 'none';
+            if (currentStoryText < storyText.length) {
+                showNextStoryText();
+            } else if (currentDialogue < dialogue.length) {
+                showNextDialogue();
+            } else {
+                // Weiterleitung zur nächsten Seite
+                window.location.href = 'Kapitel_1_7.html';
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

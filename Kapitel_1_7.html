@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitel 1.6</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: auto;
+        }
+
+        #story-container {
+            max-width: 800px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .dialogue {
+            font-size: 2em;
+            line-height: 2.0;
+            margin-bottom: 3em;
+            white-space: pre-wrap;
+        }
+
+        .vanessa {
+            color: white;
+        }
+
+        .guard {
+            color: white;
+        }
+
+        .story-text {
+            font-size: 2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+        }
+
+        .feedback {
+            font-size: 1.5em;
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .answer-container {
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+        }
+
+        .answer-input {
+            font-size: 1.5em;
+            padding: 10px;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .submit-button {
+            font-size: 1.5em;
+            padding: 10px 20px;
+            background-color: grey;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #click-arrow {
+            font-size: 24px;
+            color: white;
+            margin-top: 20px;
+            animation: pulse 1.5s infinite;
+            display: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="story-container">
+        <div id="story-text"></div>
+        <div id="dialogue-container"></div>
+        
+        <!-- Answer Containers -->
+        <div id="answer-container-1" class="answer-container">
+            <input type="text" id="answer-input-1" class="answer-input" placeholder="Deine Antwort hier">
+            <button id="submit-button-1" class="submit-button">Enter</button>
+        </div>
+        <div id="feedback-1" class="feedback"></div>
+
+        <div id="answer-container-2" class="answer-container">
+            <input type="text" id="answer-input-2" class="answer-input" placeholder="Deine Antwort hier">
+            <button id="submit-button-2" class="submit-button">Enter</button>
+        </div>
+        <div id="feedback-2" class="feedback"></div>
+
+        <div id="answer-container-3" class="answer-container">
+            <input type="text" id="answer-input-3" class="answer-input" placeholder="Deine Antwort hier">
+            <button id="submit-button-3" class="submit-button">Enter</button>
+        </div>
+        <div id="feedback-3" class="feedback"></div>
+
+        <div id="answer-container-4" class="answer-container">
+            <input type="text" id="answer-input-4" class="answer-input" placeholder="Deine Antwort hier">
+            <button id="submit-button-4" class="submit-button">Enter</button>
+        </div>
+        <div id="feedback-4" class="feedback"></div>
+
+        <div id="answer-container-5" class="answer-container">
+            <input type="text" id="answer-input-5" class="answer-input" placeholder="Deine Antwort hier">
+            <button id="submit-button-5" class="submit-button">Enter</button>
+        </div>
+        <div id="feedback-5" class="feedback"></div>
+
+        <div id="answer-container-6" class="answer-container">
+            <input type="text" id="answer-input-6" class="answer-input" placeholder="Deine Antwort hier">
+            <button id="submit-button-6" class="submit-button">Enter</button>
+        </div>
+        <div id="feedback-6" class="feedback"></div>
+
+        <div id="answer-container-7" class="answer-container">
+            <input type="text" id="answer-input-7" class="answer-input" placeholder="Deine Antwort hier">
+            <button id="submit-button-7" class="submit-button">Enter</button>
+        </div>
+        <div id="feedback-7" class="feedback"></div>
+
+        <div id="answer-container-8" class="answer-container">
+            <input type="text" id="answer-input-8" class="answer-input" placeholder="Deine Antwort hier">
+            <button id="submit-button-8" class="submit-button">Enter</button>
+        </div>
+        <div id="feedback-8" class="feedback"></div>
+
+        <div id="answer-container-9" class="answer-container">
+            <input type="text" id="answer-input-9" class="answer-input" placeholder="Deine Antwort hier">
+            <button id="submit-button-9" class="submit-button">Enter</button>
+        </div>
+        <div id="feedback-9" class="feedback"></div>
+
+        <div id="answer-container-10" class="answer-container">
+            <input type="text" id="answer-input-10" class="answer-input" placeholder="Deine Antwort hier">
+            <button id="submit-button-10" class="submit-button">Enter</button>
+        </div>
+        <div id="feedback-10" class="feedback"></div>
+
+        <div id="final-answer-container" class="answer-container">
+            <input type="text" id="final-answer-input" class="answer-input" placeholder="Deine Antwort hier">
+            <button id="final-submit-button" class="submit-button">Enter</button>
+        </div>
+        <div id="final-feedback" class="feedback"></div>
+
+        <div id="click-arrow">⬇️ Klicke hier, um weiterzulesen ⬇️</div>
+    </div>
+
+    <audio id="background-music" loop>
+        <source src="Rätsel.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const dialogue = [
+            { speaker: "Vanessa", text: "Okay, weil ich glaub ich weiß die Antwort auf das erste Wort:", className: "vanessa" }
+        ];
+
+        const correctAnswer1 = "Blei";
+        const nextDialogue1 = "Wächter: \"Oh... Ja das könnte stimmen. Was ist dann Schwarzer Vogel, 4 Buchstaben, _A_E?\"";
+
+        const correctAnswer2 = "Rabe";
+        const nextDialogue2 = "Wächter: \"Stimmt, blöd von mir. Ufermauer, 3 Buchstaben, _AI...\"";
+
+        const correctAnswer3 = "Kai";
+        const nextDialogue3 = "Wächter: \"Echt? Na gut, ich vertrau dir mal. Insel auf Spanisch, 4 Buchstaben, I _ _ A...?\"";
+
+        const correctAnswer4 = "Isla";
+        const nextDialogue4 = "Wächter: \"Okay da wär ich auch drauf gekommen. Anderes Wort für hervogehoben, 6 Buchstaben, _ E T _ N T...\"";
+
+        const correctAnswer5 = "Betont";
+        const nextDialogue5 = "Wächter: \"Wow, nicht schlecht. Dann kommt man bestimmt auch auf ein anderes Wort für Preisvorschlag, 5 Buchstaben, _ E B _ _.\"";
+
+        const correctAnswer6 = "Gebot";
+        const nextDialogue6 = "Wächter: \"Oh ja! Aber jetzt wirds schwer... Edelgas, 4 Buchstaben, _ _ O N.\"";
+
+        const correctAnswer7 = "Neon";
+        const nextDialogue7 = "Wächter: \"Klingt logisch. Anderes Wort für edel, 5 Buchstaben, _ _ B _ _.\"";
+
+        const correctAnswer8 = "Nobel";
+        const nextDialogue8 = "Wächter: \"Sehr schön. Dann muss das Lösungswort Streitfrage sein. Demnach ist Golfschlägerart, 4 Buchstaben, W _ _ _ gleich was?\"";
+
+        const correctAnswer9 = "Wood";
+        const nextDialogue9 = "Wächter: \"Okay super. Und als letztes bleibt noch übrig Meerriese der germanischen Mythologie, 5 Buchstaben, A _ G I _.\"";
+
+        const correctAnswer10 = "Aegir";
+        const nextDialogue10 = "Wächter: \"Ich bin beeindruckt, du hast mir echt geholfen, danke!\"";
+
+        const finalDialogue = [
+            "Vanessa: \"Kein Problem, darf ich jetzt durch?\"",
+            "Wächter: \"Moment mal, es gibt noch die tägliche Denkaufgabe. Wenn du die auch noch löst, dann darfst du durch.\"",
+            "Vanessa: \"Oh man... Na gut, wie lautet die Denkaufgabe?\"",
+            "Wächter: \"Drei Personen blicken aus dem Fenster in den Garten und sagen: A: 'Da drüben sind meine Tochter und meine Enkelin.' B: 'Da drüben sind meine Tochter und meine Enkelin.' C: 'Da drüben sind meine Tochter und meine Enkelin.' Alle Personen sagen die Wahrheit. Wie viele Personen befinden sich mindestens im Garten?\""
+        ];
+
+        const finalCorrectAnswer = "3";
+        const finalSuccessDialogue = [
+            "Wächter: \"Ausgezeichnet! Es befinden sich mindestens drei Personen im Garten. Wenn zwei Detektive miteinander verheiratet sind und der dritte Detektiv zum Beispiel ihr Schwiegersohn ist, sind alle Anforderungen erfüllt. Die verheirateten Detektive haben dann auch eine Urenkelin im Garten. Na gut, dann will ich dich nicht länger nerven, du darfst durch.\"",
+            "Vanessa: \"Danke (Na endlich).\"",
+            "Unsere Heldin durchtritt das Tor und verlässt damit die Stadt Marry Edge. Die Reise zum Schatz beginnt nun ganz offiziell. Und die bevorstehenden Herausforderungen werden noch viel spannender und fordernder als es sich unsere Heldin ausmalen kann."
+        ];
+
+        let currentDialogue = 0;
+        const dialogueContainer = document.getElementById('dialogue-container');
+        const answerContainer1 = document.getElementById('answer-container-1');
+        const answerContainer2 = document.getElementById('answer-container-2');
+        const answerContainer3 = document.getElementById('answer-container-3');
+        const answerContainer4 = document.getElementById('answer-container-4');
+        const answerContainer5 = document.getElementById('answer-container-5');
+        const answerContainer6 = document.getElementById('answer-container-6');
+        const answerContainer7 = document.getElementById('answer-container-7');
+        const answerContainer8 = document.getElementById('answer-container-8');
+        const answerContainer9 = document.getElementById('answer-container-9');
+        const answerContainer10 = document.getElementById('answer-container-10');
+        const finalAnswerContainer = document.getElementById('final-answer-container');
+        const feedbackElement1 = document.getElementById('feedback-1');
+        const feedbackElement2 = document.getElementById('feedback-2');
+        const feedbackElement3 = document.getElementById('feedback-3');
+        const feedbackElement4 = document.getElementById('feedback-4');
+        const feedbackElement5 = document.getElementById('feedback-5');
+        const feedbackElement6 = document.getElementById('feedback-6');
+        const feedbackElement7 = document.getElementById('feedback-7');
+        const feedbackElement8 = document.getElementById('feedback-8');
+        const feedbackElement9 = document.getElementById('feedback-9');
+        const feedbackElement10 = document.getElementById('feedback-10');
+        const finalFeedback = document.getElementById('final-feedback');
+        const clickArrowElement = document.getElementById('click-arrow');
+        const backgroundMusic = document.getElementById('background-music');
+
+        function showNextDialogue() {
+            if (currentDialogue < dialogue.length) {
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', dialogue[currentDialogue].className);
+                let speakerName = dialogue[currentDialogue].speaker;
+                dialogueElement.innerHTML = `<strong>${speakerName}:</strong> ${dialogue[currentDialogue].text}`;
+                dialogueContainer.appendChild(dialogueElement);
+                currentDialogue++;
+                clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+            } else if (currentDialogue === dialogue.length) {
+                showAnswerInput1();
+            }
+        }
+
+        function showAnswerInput1() {
+            answerContainer1.style.display = 'block'; // Make the first answer box visible
+            document.getElementById('submit-button-1').addEventListener('click', checkAnswer1);
+            clickArrowElement.style.display = 'none';
+        }
+
+        function checkAnswer1() {
+            const userAnswer1 = document.getElementById('answer-input-1').value.trim().toLowerCase();
+
+            if (userAnswer1 === correctAnswer1.toLowerCase()) {
+                feedbackElement1.style.display = 'none';
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', 'guard');
+                dialogueElement.innerText = nextDialogue1;
+                dialogueContainer.appendChild(dialogueElement);
+                answerContainer1.innerHTML = ''; // Remove the first answer box after the correct answer
+                showAnswerInput2();
+            } else {
+                feedbackElement1.style.display = 'block';
+                feedbackElement1.innerText = "Falsches Passwort";
+            }
+        }
+
+        function showAnswerInput2() {
+            answerContainer2.style.display = 'block'; // Make the second answer box visible
+            document.getElementById('submit-button-2').addEventListener('click', checkAnswer2);
+        }
+
+        function checkAnswer2() {
+            const userAnswer2 = document.getElementById('answer-input-2').value.trim().toLowerCase();
+
+            if (userAnswer2 === correctAnswer2.toLowerCase()) {
+                feedbackElement2.style.display = 'none';
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', 'guard');
+                dialogueElement.innerText = nextDialogue2;
+                dialogueContainer.appendChild(dialogueElement);
+                answerContainer2.innerHTML = ''; // Remove the second answer box after the correct answer
+                showAnswerInput3();
+            } else {
+                feedbackElement2.style.display = 'block';
+                feedbackElement2.innerText = "Falsches Passwort";
+            }
+        }
+
+        function showAnswerInput3() {
+            answerContainer3.style.display = 'block'; // Make the third answer box visible
+            document.getElementById('submit-button-3').addEventListener('click', checkAnswer3);
+        }
+
+        function checkAnswer3() {
+            const userAnswer3 = document.getElementById('answer-input-3').value.trim().toLowerCase();
+
+            if (userAnswer3 === correctAnswer3.toLowerCase()) {
+                feedbackElement3.style.display = 'none';
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', 'guard');
+                dialogueElement.innerText = nextDialogue3;
+                dialogueContainer.appendChild(dialogueElement);
+                answerContainer3.innerHTML = ''; // Remove the third answer box after the correct answer
+                showAnswerInput4();
+            } else {
+                feedbackElement3.style.display = 'block';
+                feedbackElement3.innerText = "Falsches Passwort";
+            }
+        }
+
+        function showAnswerInput4() {
+            answerContainer4.style.display = 'block'; // Make the fourth answer box visible
+            document.getElementById('submit-button-4').addEventListener('click', checkAnswer4);
+        }
+
+        function checkAnswer4() {
+            const userAnswer4 = document.getElementById('answer-input-4').value.trim().toLowerCase();
+
+            if (userAnswer4 === correctAnswer4.toLowerCase()) {
+                feedbackElement4.style.display = 'none';
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', 'guard');
+                dialogueElement.innerText = nextDialogue4;
+                dialogueContainer.appendChild(dialogueElement);
+                answerContainer4.innerHTML = ''; // Remove the fourth answer box after the correct answer
+                showAnswerInput5();
+            } else {
+                feedbackElement4.style.display = 'block';
+                feedbackElement4.innerText = "Falsches Passwort";
+            }
+        }
+
+        function showAnswerInput5() {
+            answerContainer5.style.display = 'block'; // Make the fifth answer box visible
+            document.getElementById('submit-button-5').addEventListener('click', checkAnswer5);
+        }
+
+        function checkAnswer5() {
+            const userAnswer5 = document.getElementById('answer-input-5').value.trim().toLowerCase();
+
+            if (userAnswer5 === correctAnswer5.toLowerCase()) {
+                feedbackElement5.style.display = 'none';
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', 'guard');
+                dialogueElement.innerText = nextDialogue5;
+                dialogueContainer.appendChild(dialogueElement);
+                answerContainer5.innerHTML = ''; // Remove the fifth answer box after the correct answer
+                showAnswerInput6();
+            } else {
+                feedbackElement5.style.display = 'block';
+                feedbackElement5.innerText = "Falsches Passwort";
+            }
+        }
+
+        function showAnswerInput6() {
+            answerContainer6.style.display = 'block'; // Make the sixth answer box visible
+            document.getElementById('submit-button-6').addEventListener('click', checkAnswer6);
+        }
+
+        function checkAnswer6() {
+            const userAnswer6 = document.getElementById('answer-input-6').value.trim().toLowerCase();
+
+            if (userAnswer6 === correctAnswer6.toLowerCase()) {
+                feedbackElement6.style.display = 'none';
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', 'guard');
+                dialogueElement.innerText = nextDialogue6;
+                dialogueContainer.appendChild(dialogueElement);
+                answerContainer6.innerHTML = ''; // Remove the sixth answer box after the correct answer
+                showAnswerInput7();
+            } else {
+                feedbackElement6.style.display = 'block';
+                feedbackElement6.innerText = "Falsches Passwort";
+            }
+        }
+
+        function showAnswerInput7() {
+            answerContainer7.style.display = 'block'; // Make the seventh answer box visible
+            document.getElementById('submit-button-7').addEventListener('click', checkAnswer7);
+        }
+
+        function checkAnswer7() {
+            const userAnswer7 = document.getElementById('answer-input-7').value.trim().toLowerCase();
+
+            if (userAnswer7 === correctAnswer7.toLowerCase()) {
+                feedbackElement7.style.display = 'none';
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', 'guard');
+                dialogueElement.innerText = nextDialogue7;
+                dialogueContainer.appendChild(dialogueElement);
+                answerContainer7.innerHTML = ''; // Remove the seventh answer box after the correct answer
+                showAnswerInput8();
+            } else {
+                feedbackElement7.style.display = 'block';
+                feedbackElement7.innerText = "Falsches Passwort";
+            }
+        }
+
+        function showAnswerInput8() {
+            answerContainer8.style.display = 'block'; // Make the eighth answer box visible
+            document.getElementById('submit-button-8').addEventListener('click', checkAnswer8);
+        }
+
+        function checkAnswer8() {
+            const userAnswer8 = document.getElementById('answer-input-8').value.trim().toLowerCase();
+
+            if (userAnswer8 === correctAnswer8.toLowerCase()) {
+                feedbackElement8.style.display = 'none';
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', 'guard');
+                dialogueElement.innerText = nextDialogue8;
+                dialogueContainer.appendChild(dialogueElement);
+                answerContainer8.innerHTML = ''; // Remove the eighth answer box after the correct answer
+                showAnswerInput9();
+            } else {
+                feedbackElement8.style.display = 'block';
+                feedbackElement8.innerText = "Falsches Passwort";
+            }
+        }
+
+        function showAnswerInput9() {
+            answerContainer9.style.display = 'block'; // Make the ninth answer box visible
+            document.getElementById('submit-button-9').addEventListener('click', checkAnswer9);
+        }
+
+        function checkAnswer9() {
+            const userAnswer9 = document.getElementById('answer-input-9').value.trim().toLowerCase();
+
+            if (userAnswer9 === correctAnswer9.toLowerCase()) {
+                feedbackElement9.style.display = 'none';
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', 'guard');
+                dialogueElement.innerText = nextDialogue9;
+                dialogueContainer.appendChild(dialogueElement);
+                answerContainer9.innerHTML = ''; // Remove the ninth answer box after the correct answer
+                showAnswerInput10();
+            } else {
+                feedbackElement9.style.display = 'block';
+                feedbackElement9.innerText = "Falsches Passwort";
+            }
+        }
+
+        function showAnswerInput10() {
+            answerContainer10.style.display = 'block'; // Make the tenth answer box visible
+            document.getElementById('submit-button-10').addEventListener('click', checkAnswer10);
+        }
+
+        function checkAnswer10() {
+            const userAnswer10 = document.getElementById('answer-input-10').value.trim().toLowerCase();
+
+            if (userAnswer10 === correctAnswer10.toLowerCase()) {
+                feedbackElement10.style.display = 'none';
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', 'guard');
+                dialogueElement.innerText = nextDialogue10;
+                dialogueContainer.appendChild(dialogueElement);
+                answerContainer10.innerHTML = ''; // Remove the tenth answer box after the correct answer
+                showFinalDialogue();
+            } else {
+                feedbackElement10.style.display = 'block';
+                feedbackElement10.innerText = "Falsches Passwort";
+            }
+        }
+
+        function showFinalDialogue() {
+            finalDialogue.forEach(line => {
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', 'guard');
+                dialogueElement.innerText = line;
+                dialogueContainer.appendChild(dialogueElement);
+            });
+            finalAnswerContainer.style.display = 'block'; // Show final answer input
+            document.getElementById('final-submit-button').addEventListener('click', checkFinalAnswer);
+        }
+
+        function checkFinalAnswer() {
+            const userFinalAnswer = document.getElementById('final-answer-input').value.trim();
+
+            if (userFinalAnswer === finalCorrectAnswer) {
+                finalFeedback.style.display = 'none';
+                finalSuccessDialogue.forEach(line => {
+                    const dialogueElement = document.createElement('div');
+                    dialogueElement.classList.add('dialogue', 'guard');
+                    dialogueElement.innerText = line;
+                    dialogueContainer.appendChild(dialogueElement);
+                });
+                clickArrowElement.style.display = 'block';
+                let clickCount = 0;
+                document.addEventListener('click', () => {
+                    clickCount++;
+                    if (clickCount === 1) {
+                        window.location.href = 'Kapitel_2_1.html';
+                    }
+                });
+            } else {
+                finalFeedback.style.display = 'block';
+                finalFeedback.innerText = "Falsches Passwort";
+            }
+        }
+
+        // Start the dialogue and background music
+        showNextDialogue();
+        backgroundMusic.play();
+
+        // Listen for clicks on the document
+        document.addEventListener('click', () => {
+            clickArrowElement.style.display = 'none';
+            if (currentDialogue < dialogue.length) {
+                showNextDialogue();
+            } else if (currentDialogue === dialogue.length) {
+                showAnswerInput1();
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+

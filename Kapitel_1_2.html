@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schatzsuche Geschichte</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: auto;
+        }
+
+        #story-container {
+            max-width: 800px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        #story-text,
+        #post-image-sentence,
+        #new-text {
+            font-size: 2em;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            margin-bottom: 20px;
+        }
+
+        .dialogue {
+            font-size: 2em;
+            line-height: 1.6;
+            margin-bottom: 3em;
+            white-space: pre-wrap;
+        }
+
+        .vanessa {
+            color: white;
+        }
+
+        .tamino {
+            color: lightblue;
+        }
+
+        .hybern {
+            color: violet;
+        }
+
+        .image {
+            width: 100%;
+            max-width: 800px;
+            display: none;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 2s;
+            align-self: center;
+        }
+
+        #click-arrow {
+            font-size: 24px;
+            color: white;
+            margin-top: 20px;
+            animation: pulse 1.5s infinite;
+            display: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #large-text {
+            font-size: 5em;
+            display: none;
+            background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="story-container">
+        <div id="story-text"></div>
+        <img id="market-image" class="image" src="Markt.png" alt="Markt">
+        <div id="post-image-sentence"></div>
+        <img id="barkeeper-image" class="image" src="Barkeeper.png" alt="Barkeeper">
+        <div id="dialogue-container"></div>
+        <div id="new-text"></div>
+        <div id="large-text">Willkommen zur großen Hochzeits-Schnitzeljagd</div>
+        <div id="click-arrow">⬇️ Klicke hier, um weiterzulesen ⬇️</div>
+    </div>
+
+    <audio id="village-audio" src="Village.mp3" loop></audio>
+    <audio id="bar-audio" src="Bar.mp3" loop></audio>
+
+    <script>
+        const storyText = [
+            "Es wimmelt nur so von Menschen aus aller Welt.",
+            "Es scheint als wäre unsere Heldin auf einer Art Markt angelangt.",
+            "Praktisch, schließlich sollte sich unsere Heldin vor ihrer Reise mit Waffen, Rüstung und reichlich Proviant eindecken für die Reise.",
+            "Außerdem muss sie irgendwie an Informationen über den Schatz gelangen.",
+            "Unsere Heldin entscheidet sich in einer Bar vorbeizuschauen.",
+            "Sicherlich gibt es dort gesprächige Trinker.",
+            "Die Bar trägt den Namen 'Salziger Spucknapf'.",
+            "Nicht sonderlich ansprechend, aber solang sie an ihre Informationen kommt ist ihr das egal.",
+            "Beim Eintreten erblickt unsere Heldin gerade mal 3 Personen in dieser kleinen bescheidenen Bar.",
+            "Nicht unbedingt verwunderlich, schließlich ist es gerade mal 4 Uhr nachmittags.",
+            "2 ältere Damen tratschen an einem Stehtisch.",
+            "Klischeehaft reinigt der Barkeeper hinter der Theke einige Gläser mit einem Tuch.",
+            "Es sieht nicht aus als hätte er sonderlich viel Arbeit aktuell, deshalb entscheidet sich unsere Heldin den Barkeeper anzusprechen.",
+            "Er sieht jung, charmant und äußerst muskulös aus."
+        ];
+
+        const dialogue = [
+            { speaker: "Vanessa", text: "Entschuldigung, dürfte ich Ihnen eine Frage stellen?", className: "vanessa" },
+            { speaker: "Barkeeper", text: "Na klar, schieß los.", className: "tamino" },
+            { speaker: "Vanessa", text: "Bestimmt haben Sie von dem Mythos mit dem Schatz in diesem Land gehört über den alle Welt redet. Ich bin auf der Suche danach, wissen Sie vielleicht wie man da hingelangt?", className: "vanessa" },
+            { speaker: "Barkeeper", text: "Der Schatz?! Junge Dame, Sie wissen schon, dass bereits viele Abenteurer sich auf die Suche nach dem Schatz begeben haben und nie zurückkehrten, oder?", className: "tamino" },
+            { speaker: "Vanessa", text: "Dessen bin ich mir bewusst, aber ich will es dennoch versuchen.", className: "vanessa" },
+            { speaker: "Barkeeper", text: "*seufz* Na gut. Also zuallererst sollten Sie auf gar keinen Fall mit dieser Ausrüstung los. Auf dem Weg zum Schatz befinden sich viele gefährliche Kreaturen. Eine gescheite Rüstung und Waffe ist Standard für Abenteurer. Auf dem Markt von Marry Edge wird man jedoch auf alle Fälle fündig. Kleiner Geheimtipp: Seien Sie nicht zu geizig beim Ausrüstungskauf. Einige Leute verkaufen gebrauchte Waffen und bewerben sie als brandneu zu horrenden Preisen. Wenn deine Waffe dann im Kampf plötzlich kaputt geht, war's das.", className: "tamino" },
+            { speaker: "Vanessa", text: "Geht klar, reichen 20 Taler?", className: "vanessa" },
+            { speaker: "Barkeeper", text: "20? Bisschen wenig, meinste nicht?", className: "tamino" },
+            { speaker: "Vanessa", text: "Ja stimmt schon, aber mehr hab ich leider nicht.", className: "vanessa" },
+            { speaker: "Barkeeper", text: "Mit etwas Glück finden Sie vielleicht einen guten Händler. Jedenfalls, um zum Schatz zu gelangen, sollten Sie die Stadt im Norden verlassen. Dort gelangen Sie in die Wälder der Einheit. Vielleicht gibt es da aber noch etwas, was sie über diese Welt wissen sollten.", className: "tamino" },
+            { speaker: "???", text: "*PLAUZ* (Ein lauter Knall kommt von den Toilettentüren und es tritt ein Mann von großer Statur hervor) SOOO TAMINO, SCHENKSTE MIR NOCH EENEN EIN?", className: "hybern" },
+            { speaker: "Vanessa", text: "*flüsternd* Wer ist er denn?", className: "vanessa" },
+            { speaker: "Tamino", text: "*flüsternd* Ein nerviger Stammgast, am besten du provozierst ihn nicht.", className: "tamino" },
+            { speaker: "???", text: "Wer ist denn die hübsche Frau hier? Na, willste einen aufs Haus?", className: "hybern" },
+            { speaker: "Vanessa", text: "Nein danke.", className: "vanessa" },
+            { speaker: "???", text: "Ach komm schon, sei nicht so. Du bist nicht von hier oder? Was hast du hier zu suchen in unserer schönen Stadt Marry Edge?", className: "hybern" },
+            { speaker: "Vanessa", text: "Ich bin nur auf Durchreise. Ich will zum legendären Schatz.", className: "vanessa" },
+            { speaker: "Hybern", text: "Der Schatz?! HAHAHAHA!!! Also ob du das schaffen würdest. Nicht mal die stärksten Kämpfer schaffen es zum Schatz, auch nicht in einer Gruppe. Und du willst das alleine schaffen? Träum weiter Weib.", className: "hybern" },
+            { speaker: "Tamino", text: "Hybern... Lass Sie in Ruhe.", className: "tamino" },
+            { speaker: "Vanessa", text: "Hör auf dich über mich lustig zu machen, du halbstarker Vollidiot.", className: "vanessa" },
+            { speaker: "Hybern", text: "... (Es vergehen 5 Sekunden, in denen absolute Totenstille herrscht) Wie hast du mich genannt?", className: "hybern" },
+            { speaker: "Tamino", text: "Okay, am besten wir bleiben jetzt alle mal etwas ru...", className: "tamino" },
+            { speaker: "Hybern", text: "*FATSCH* (Hybern verpasst unserer Heldin eine Backpfeife mit voller Wucht) Dummes Miststück... Wehe du redest nochmal so mit mir oder es setzt noch was. Immer diese nervigen Träumer, die denken sie könnten die Welt retten. (Hybern ext sein Glas, schmeißt es auf den Boden und verlässt die Bar)", className: "hybern" },
+            { speaker: "Tamino", text: "Hey du, ist alles gut? Komm ich helf dir hoch!", className: "tamino" },
+            { speaker: "Vanessa", text: "Danke.", className: "vanessa" },
+            { speaker: "Tamino", text: "Ich muss mich entschuldigen für ihn. Jeden Tag kommt er hierher. Jeden Tag stiftet er neuen Unfug. Er ist bekannt und gefürchtet in der Stadt. Weißt du was, ich mach mir etwas Sorgen um dich. Nimm das hier (Tamino überreicht dir eine Art Kommunikationsgerät, es befindet sich ein Kontakt mit Pinguin-Profilbild drin. Die Nummer ist 0176 215... Der Rest ist nicht sichtbar). Wenn du Hilfe brauchst, kontaktier mich einfach. Nimm es mir bitte nicht übel, aber ich mach mir etwas Sorgen bei deinem Plan.", className: "tamino" },
+            { speaker: "Vanessa", text: "Ich verstehe, vielen Dank.", className: "vanessa" },
+            { speaker: "Tamino", text: "Wie lautet denn dein Name eigentlich?", className: "tamino" },
+            { speaker: "Vanessa", text: "Mein Name ist Vanessa.", className: "vanessa" },
+            { speaker: "Tamino", text: "Okay Vanessa, freut mich, dich kennenzulernen. Was ich dir vor der ganzen Sache mit Hybern noch erzählen wollte, ist, dass diese Welt etwas besonders ist. Häufig musst du Rätsel lösen, um Fortschritt zu machen. Diese Rätsel haben stets eine unterschiedliche Gestalt. Doch in den meisten Fällen musst du ein Passwort eingeben, um weiterzukommen. Also dann, viel Erfolg auf deiner Reise und denk dran, kontaktier mich, wenn du nicht weiterkommst.", className: "tamino" },
+            { speaker: "Vanessa", text: "Mach ich, vielen Dank für die Unterstützung, Tamino. Man sieht sich.", className: "vanessa" }
+        ];
+
+        const newStoryText = [
+            "Unsere Heldin und Tamino verabschieden sich und unsere Heldin verlässt die Bar und hält Ausschau nach Hybern, nur für den Fall dass er irgendwo noch auf Sie wartet. Plötzlich wird alles schwarz und es erscheint ein großer Schriftzug:",
+        ];
+
+        let currentSentence = 0;
+        let currentDialogue = 0;
+        let dialogueStarted = false;
+        let newStoryStarted = false;
+        let newStoryIndex = 0;
+        const storyTextElement = document.getElementById('story-text');
+        const marketImageElement = document.getElementById('market-image');
+        const barkeeperImageElement = document.getElementById('barkeeper-image');
+        const clickArrowElement = document.getElementById('click-arrow');
+        const postImageSentenceElement = document.getElementById('post-image-sentence');
+        const dialogueContainer = document.getElementById('dialogue-container');
+        const newTextElement = document.getElementById('new-text');
+        const largeTextElement = document.getElementById('large-text');
+        const villageAudio = document.getElementById('village-audio');
+        const barAudio = document.getElementById('bar-audio');
+
+        function playVillageAudio() {
+            villageAudio.play();
+            barAudio.pause();
+            barAudio.currentTime = 0;
+        }
+
+        function playBarAudio() {
+            barAudio.play();
+            villageAudio.pause();
+            villageAudio.currentTime = 0;
+        }
+
+        function showNextSentence() {
+            if (currentSentence < storyText.length) {
+                if (currentSentence < 3) {
+                    // Zeige die bisherigen Sätze an
+                    storyTextElement.innerText += storyText[currentSentence] + "\n\n";
+                    currentSentence++;
+                    clickArrowElement.style.display = 'block';
+                } else if (currentSentence === 3) {
+                    // Zeige das Bild 'Markt.png' und den Satz darunter
+                    storyTextElement.innerText += storyText[currentSentence] + "\n\n";
+                    marketImageElement.style.display = 'block';
+                    setTimeout(() => {
+                        marketImageElement.style.opacity = 1;
+                    }, 100); // Verzögerung vor der Einblendung
+                    currentSentence++;
+                    clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+                } else if (currentSentence < storyText.length - 1) {
+                    // Zeige die Sätze unterhalb des Bildes 'Markt.png'
+                    postImageSentenceElement.innerText += storyText[currentSentence] + "\n\n";
+                    currentSentence++;
+                    clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+                    // Spielt Bar-Audio ab, wenn der spezifische Satz erreicht ist
+                    if (currentSentence === 8) {
+                        playBarAudio();
+                    }
+                } else if (currentSentence === storyText.length - 1) {
+                    // Zeige das Bild 'Barkeeper.png' und den letzten Satz
+                    postImageSentenceElement.innerText += storyText[currentSentence] + "\n\n";
+                    barkeeperImageElement.style.display = 'block';
+                    setTimeout(() => {
+                        barkeeperImageElement.style.opacity = 1;
+                    }, 100); // Verzögerung vor der Einblendung
+                    currentSentence++;
+                    clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+                }
+            } else if (!dialogueStarted) {
+                // Starte den Dialog unterhalb des Bildes 'Barkeeper.png'
+                dialogueStarted = true;
+                showNextDialogue();
+            } else if (newStoryStarted) {
+                // Zeige den neuen Storytext
+                showNextNewStory();
+            } else {
+                clickArrowElement.style.display = 'none';
+            }
+        }
+
+        function showNextDialogue() {
+            if (currentDialogue < dialogue.length) {
+                const dialogueElement = document.createElement('div');
+                dialogueElement.classList.add('dialogue', dialogue[currentDialogue].className);
+                let speakerName = dialogue[currentDialogue].speaker;
+                if (speakerName === 'Barkeeper' && currentDialogue > 12) {
+                    speakerName = 'Tamino';
+                } else if (speakerName === '???' && currentDialogue > 24) {
+                    speakerName = 'Hybern';
+                }
+                dialogueElement.innerHTML = `<strong>${speakerName}:</strong> ${dialogue[currentDialogue].text}`;
+                dialogueContainer.appendChild(dialogueElement);
+                currentDialogue++;
+                clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+            } else {
+                dialogueStarted = false;
+                newStoryStarted = true;
+                clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+            }
+        }
+
+        function showNextNewStory() {
+            if (newStoryIndex < newStoryText.length) {
+                newTextElement.innerText += newStoryText[newStoryIndex] + "\n\n";
+                newStoryIndex++;
+                clickArrowElement.style.display = 'block'; // Pulsierenden Text anzeigen
+            } else {
+                largeTextElement.style.display = 'block';
+                clickArrowElement.style.display = 'block';
+                newStoryStarted = false;
+            }
+        }
+
+        // Zeige den ersten Satz initial an und spiele die Hintergrundmusik ab
+        showNextSentence();
+        playVillageAudio();
+
+        // Höre auf Klicks im gesamten Dokument
+        document.addEventListener('click', () => {
+            clickArrowElement.style.display = 'none';
+            if (!dialogueStarted && !newStoryStarted && largeTextElement.style.display !== 'block') {
+                showNextSentence();
+            } else if (dialogueStarted) {
+                showNextDialogue();
+            } else if (newStoryStarted) {
+                showNextNewStory();
+            } else {
+                window.location.href = "Kapitel_1_3.html";
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
