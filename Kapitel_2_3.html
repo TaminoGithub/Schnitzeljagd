@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitel 2: Wälder der Einheit</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: auto;
+            position: relative;
+        }
+
+        .story-text {
+            font-size: 1.8em;
+            margin: 40px 20px 20px 20px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="background-music" autoplay loop>
+        <source src="Wald.mp3" type="audio/mpeg">
+        Ihr Browser unterstützt das Audioelement nicht.
+    </audio>
+    <audio id="battle-music" loop>
+        <source src="Kampf.mp3" type="audio/mpeg">
+        Ihr Browser unterstützt das Audioelement nicht.
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            let clickCount = 0;
+            const backgroundMusic = document.getElementById('background-music');
+            const battleMusic = document.getElementById('battle-music');
+
+            // Erster Text wird angezeigt
+            addText("Unsere Heldin ist es nicht gewohnt für lange Zeit auf solch unbequemen Boden herumzulaufen, weshalb langsam alles anfängt wehzutun. Arznei hat Sie leider überhaupt nicht dabei. Sollte es also so weit kommen, dass Sie sich verarzten muss, dann gibt es ein Riesenproblem. Unsere Heldin macht sich währenddessen viele Gedanken um diese Welt. ,,Welchen gefährlichen Kreaturen werde ich wirklich auf dem Weg zum Schatz begegnen? Werd ich irgendwann in der Lage sein, Magie anwenden zu können? Wie geht es überhaupt nach dem Wald weiter? Werd ich auf weitere Abenteurer stoßen während meiner Reise?\" Doch für eine ganz besondere Frage brannte Sie enorm: ,,Wer ist König Alistor?\" Mit ausreichend Geduld werden Ihr jedoch sicherlich noch all diese Fragen beantwortet. Plötzlich zuckt unsere Heldin zusammen. Eben war Sie noch vollkommen vertieft in Ihren Gedanken, doch nun ist Sie wieder zurück in der Realität und Ihre Ohren täuschen Sie nicht. Irgendwo in der Nähe ist ein Monster.");
+
+            body.addEventListener('click', () => {
+                clickCount++;
+                if (clickCount === 1) {
+                    // Hintergrundmusik stoppen, Kampfmusik starten und ersten Teil des Kampfs anzeigen
+                    backgroundMusic.pause();
+                    battleMusic.play();
+                    showBattleTextPart(1);
+                }
+            });
+
+            function addText(text) {
+                const storyTextElement = document.createElement('div');
+                storyTextElement.classList.add('story-text');
+                storyTextElement.textContent = text;
+                document.body.appendChild(storyTextElement);
+                setTimeout(() => {
+                    storyTextElement.style.opacity = 1;
+                }, 10); // Kurzer Delay für den Übergang
+            }
+
+            function showBattleTextPart(partNumber) {
+                const battleTextParts = [
+                    "Unsere Heldin nimmt eine erwartungsvolle Position ein und zückt Ihr Schwert. ,,Na los, komm her wenn du dich traust. Ich bin gut vorbereitet.\" dachte Sie sich. In diesem Augenblick springt ein Schleim auf Sie zu. Er hatte sich im Busch versteckt und auf den richtigen Moment gewartet. Doch unsere Heldin bleibt wachsam, dreht sich schnell genug um und zerschneidet den Schleim in zwei gleich große Teile. Stolz freut Sie sich über Ihren ersten Erfolg im Kampf, als wie aus dem Nichts eine noch viel größere Kreatur aus dem Gebüsch hervorkommt. Ein Bär!",
+                    "Jetzt ist die Situation ernst. Wenn unsere Heldin vom Bär getroffen wird, war's das. Hochkonzentriert stehen sich beide Kontrahenten gegenüber und starren einander in Ihre Augen. Der Bär holt zum Schlag aus, unsere Heldin kontert mit Ihrem Schwert. Es scheint dem Bär nichts auszumachen, womöglich hat Sie es mit einem magischen Bären zu tun, welcher noch viel stärker ist als ein normaler Bär.",
+                    "Flucht klingt nach der einzig logischen Lösung an dieser Stelle. Doch genau in dem Moment, wo Sie losrennen will, wird unsere Heldin vom Bär gepackt. Sie kann sich nicht mehr befreien. Ist es hier schon vorbei? Der erste Kampf? Offenbar tut sich der Bär jedoch schwer mit der Rüstung unserer Heldin. Es scheint Ihm nicht möglich zu sein, Sie gefahrlos zu attackieren.",
+                    "Dennoch verpasst er Ihr ein Schlag mit voller Wucht auf den Helm. Unsere Heldin kippt um. Sie versucht alles Mögliche, um den Angriffen des Bären auch auf dem Boden noch auszuweichen. Doch wenn Sie nicht bald etwas unternimmt, wird der Bär Sie vollkommen vernichten. Beide holen zum Schlag aus. Jetzt oder nie. Wer hier den besseren Treffer landet, gewinnt. Die Fäuste treffen auf das Schwert. Kein Widerstand, die Fäuste fliegen einfach weiter in Richtung der Heldin. Sie schließt die Augen und hofft auf ein letztes Wunder."
+                ];
+
+                if (partNumber <= battleTextParts.length) {
+                    addText(battleTextParts[partNumber - 1]);
+                    body.addEventListener('click', function handleClick() {
+                        body.removeEventListener('click', handleClick);
+                        showBattleTextPart(partNumber + 1);
+                    }, { once: true });
+                } else {
+                    addText("*FITSCH*");
+                    battleMusic.pause();
+                    body.addEventListener('click', function handleClick() {
+                        body.removeEventListener('click', handleClick);
+                        addText("(Vanessa öffnet die Augen) Vor Ihr liegt der Bär mit einem Pfeil mitten im Kopf. Im Gebüsch raschelt es. Ein Mensch in Rüstung und mit einem Bogen tritt hervor.");
+                        body.addEventListener('click', () => {
+                            window.location.href = 'Kapitel_2_4.html';
+                        }, { once: true });
+                    }, { once: true });
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+

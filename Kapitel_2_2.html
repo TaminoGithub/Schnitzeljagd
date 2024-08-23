@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitel 2: Wälder der Einheit</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: auto;
+        }
+
+        .story-text {
+            font-size: 1.8em;
+            margin: 40px 20px 20px 20px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        #image-container {
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #image-container img {
+            width: 50%; /* Bildbreite auf 50% der Containerbreite reduziert */
+            height: auto;
+        }
+
+        #answer-container {
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #answer-input {
+            font-size: 1.5em;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+            text-align: center;
+        }
+
+        #submit-button {
+            font-size: 1.5em;
+            padding: 10px 20px;
+            background-color: grey;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #error-message {
+            color: red;
+            font-size: 1.5em;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="background-music" autoplay loop>
+        <source src="Wald.mp3" type="audio/mpeg">
+        Ihr Browser unterstützt das Audioelement nicht.
+    </audio>
+    <audio id="riddle-music" loop>
+        <source src="Rätsel.mp3" type="audio/mpeg">
+        Ihr Browser unterstützt das Audioelement nicht.
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            let clickCount = 0;
+            const backgroundMusic = document.getElementById('background-music');
+            const riddleMusic = document.getElementById('riddle-music');
+
+            // Erster Text wird angezeigt
+            addText("Plötzlich bemerkt unsere Heldin eine Änderung der Atmosphäre. Die magische Blockade hat sich aufgelöst und der Wald der Einheit lässt sich nun betreten. Glücklicherweise durchführt ein Trampelpfad den Wald an dieser Stelle noch, aber ob das auch bis zum Ende so bleibt? Jedenfalls kann unsere Heldin hier schon mal nicht vom Weg abkommen. Es vergehen einige Stunden, in denen das Terrain immer anstrengender zu bewältigen wird. Unsere Heldin ist nun schon tief in den Wald vorgedrungen und entscheidet sich eine Pause einzulegen. Sie schlägt ein Picknick auf und bereitet ihren Proviant vom Lebensmittelhändler vor. Es sieht alles sehr schmackhaft aus.");
+
+            body.addEventListener('click', () => {
+                clickCount++;
+                if (clickCount === 1) {
+                    // Zweiter Text wird angezeigt
+                    addText("Mit knurrendem Magen greift unsere Heldin zu, jedoch kommt genau in diesem Augenblick ein Tier vorbei und schnappt Ihr das Essen direkt aus der Hand und flieht wieder in den Wald. Unsere Heldin reagiert schnell und rennt dem Tier hinterher. Nach einer langen Jagd bekommt unsere Heldin das Tier endlich zu fassen und holt sich ihren Proviant zurück. Doch wie kommt Sie jetzt wieder an Ihre Raststelle zurück?");
+                } else if (clickCount === 2) {
+                    // Musik wechseln und Bild/Regeln/ Aufgabe anzeigen
+                    backgroundMusic.pause();
+                    riddleMusic.play();
+                    showImageAndText("Verfolgungsjagd.png", "Regeln: Das orangene Rechteck ist die Picknick-Decke (bzw. Raststelle), der schwarze Pfad war der Weg den die Heldin bei der Jagd nach dem Tier hinterlassen hat. Die grünen Punkte sind Bäume. Die grauen Linien sind Mauern, zu anstrengend zum hochklettern. Der schwarze Umriss darf nicht übertreten werden. Die Bewegung von einem Kästchen zum andern gilt als ein 'Schritt'.", "Aufgabe: Wie viele 'Schritte' sind nötig, um so schnell wie möglich zurück zur Raststelle zu gelangen?");
+                } else if (clickCount === 3) {
+                    // Antwortfeld anzeigen
+                    showAnswerField();
+                }
+            });
+
+            function addText(text) {
+                const storyTextElement = document.createElement('div');
+                storyTextElement.classList.add('story-text');
+                storyTextElement.textContent = text;
+                document.body.appendChild(storyTextElement);
+                setTimeout(() => {
+                    storyTextElement.style.opacity = 1;
+                }, 10); // Kurzer Delay für den Übergang
+            }
+
+            function showImageAndText(imageSrc, rulesText, taskText) {
+                const imageContainer = document.createElement('div');
+                imageContainer.id = 'image-container';
+                imageContainer.innerHTML = `<img src="${imageSrc}" alt="Verfolgungsjagd">`;
+                document.body.appendChild(imageContainer);
+                setTimeout(() => {
+                    imageContainer.style.opacity = 1;
+                }, 10);
+
+                addText(rulesText);
+                addText(taskText);
+            }
+
+            function showAnswerField() {
+                const answerContainer = document.createElement('div');
+                answerContainer.id = 'answer-container';
+                answerContainer.innerHTML = `
+                    <input type="text" id="answer-input" placeholder="Antwort eingeben...">
+                    <button id="submit-button">Enter</button>
+                    <div id="error-message">Falsche Antwort</div>
+                `;
+                document.body.appendChild(answerContainer);
+                setTimeout(() => {
+                    answerContainer.style.opacity = 1;
+                }, 10);
+
+                const submitButton = document.getElementById('submit-button');
+                const answerInput = document.getElementById('answer-input');
+                const errorMessage = document.getElementById('error-message');
+
+                submitButton.addEventListener('click', () => {
+                    const answer = answerInput.value.trim();
+                    if (answer === "38") { // Die richtige Antwort ist jetzt 38
+                        window.location.href = "Kapitel_2_3.html";
+                    } else {
+                        errorMessage.style.display = "block";
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+
+

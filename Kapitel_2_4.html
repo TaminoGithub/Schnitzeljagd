@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitel 2: Wälder der Einheit</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: auto;
+            position: relative;
+        }
+
+        .story-text {
+            font-size: 1.8em;
+            margin: 40px 20px 20px 20px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .dialogue-text {
+            font-size: 1.8em;
+            margin: 40px 20px 20px 20px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .kai {
+            color: yellow;
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="background-music" autoplay loop>
+        <source src="Wald.mp3" type="audio/mpeg">
+        Ihr Browser unterstützt das Audioelement nicht.
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            let clickCount = 0;
+
+            // Zeige den ersten Text an
+            addText("(Vanessa öffnet die Augen) Vor Ihr liegt der Bär mit einem Pfeil mitten im Kopf. Im Gebüsch raschelt es. Ein Mensch in Rüstung und mit einem Bogen tritt hervor.");
+
+            body.addEventListener('click', () => {
+                clickCount++;
+                if (clickCount === 1) {
+                    addDialogue("???: \"HEY, IST ALLES IN ORDNUNG BEI DIR? HÖRST DU MICH? KOMM ICH HELF DIR HOCH!\"", true);
+                } else if (clickCount === 2) {
+                    addText("Noch etwas erstarrt von den Ereignissen reicht unsere Heldin dem Retter in Not die Hand. Er hilft Ihr auf die Beine.");
+                } else if (clickCount === 3) {
+                    addDialogue("???: \"Wie geht's dir?\"", true);
+                } else if (clickCount === 4) {
+                    addDialogue("Vanessa: \"Ähm ja ganz gut bis auf die Wunde am Kopf.\"", false);
+                } else if (clickCount === 5) {
+                    addDialogue("???: \"Oh oh, das könnte schlecht sein. Eine Verletzung am Kopf ist immer gefährlich. Ich hab Arzneimittel dabei, was brauchst du?\"", true);
+                } else if (clickCount === 6) {
+                    addDialogue("Vanessa: \"Erstmal muss die Blutung gestoppt werden, also Verbandszeug.\"", false);
+                } else if (clickCount === 7) {
+                    addDialogue("???: \"Geht klar, soll ich dir deinen Helm abnehmen?\"", true);
+                } else if (clickCount === 8) {
+                    addDialogue("Vanessa: \"Das wär nett.\"", false);
+                } else if (clickCount === 9) {
+                    addDialogue("???: \"Okay dann beiß die Zähne zusammen, es könnte etwas wehtun.\"", true);
+                } else if (clickCount === 10) {
+                    addDialogue("Vanessa: \"(angestrengt probiert Sie den Schmerz zu tolerieren) Aua aua aua.\"", false);
+                } else if (clickCount === 11) {
+                    addDialogue("???: \"Ich weiß, es tut mir leid. Das war's schon. Jetzt das Verbandszeug.\"", true);
+                } else if (clickCount === 12) {
+                    addDialogue("Vanessa: \"Mach schnell, ich merke langsam den Blutverlust.\"", false);
+                } else if (clickCount === 13) {
+                    addDialogue("???: \"Ja ich beeil mich! ... So, dann hier noch... Und... Fertig!\"", true);
+                } else if (clickCount === 14) {
+                    addDialogue("Vanessa: \"Danke, es fühlt sich schon ein wenig besser an. Das war echt nett von Ihnen. Ohne Sie wär ich höchstwahrscheinlich gestorben.\"", false);
+                } else if (clickCount === 15) {
+                    addDialogue("???: \"Tja dann war mein Timing wohl grade noch richtig. Freut mich, dass du überlebt hast. Solche Kreaturen kommen in diesem Gebiet eher selten vor, warst du das erste mal hier?\"", true);
+                } else if (clickCount === 16) {
+                    addDialogue("Vanessa: \"Ja, ich hab heute morgen meine Reise erst angetreten. Ich dachte meine Rüstung und das Schwert würden ausreichen um hier einigermaßen klarzukommen. Ich hab das ganze wohl unterschätzt.\"", false);
+                } else if (clickCount === 17) {
+                    addDialogue("???: \"Das passiert den meisten. Es gibt viele Abenteurer, die den Start Ihrer Reise etwas überstürzen, ohne dich jetzt angreifen zu wollen.\"", true);
+                } else if (clickCount === 18) {
+                    addDialogue("Vanessa: \"Nein Sie haben ja recht, ich hätte vorsichtiger sein sollen. Ich bin allerdings schon lange unterwegs heute und mir ging so langsam die Energie aus. Dieser Kampf kam zu einem äußerst unpassenden Zeitpunkt.\"", false);
+                } else if (clickCount === 19) {
+                    addDialogue("???: \"Das stimmt wohl. Aber Moment mal... Du kommst mir bekannt vor... Hast du zufällig gestern die Rüstung von mir in Marry Edge gekauft, kurz bevor ich den Laden geschlossen hab?\"", true);
+                } else if (clickCount === 20) {
+                    addDialogue("Vanessa: \"OH JA jetzt wo Sie es sagen. Sie waren wirklich der Rüstungshändler. Was ein Zufall, dass wir uns hier erneut begegnen!\"", false);
+                } else if (clickCount === 21) {
+                    addDialogue("Rüstungshändler: \"Naja wir haben beide unsere Reise heute morgen angetreten, es war also gar nicht so abwegig, dass wir uns hier begegnen.\"", true);
+                } else if (clickCount === 22) {
+                    addDialogue("Vanessa: \"Da ist was dran. Wie lautet denn eigentlich Ihr Name?\"", false);
+                } else if (clickCount === 23) {
+                    addDialogue("Rüstungshändler: \"Mein Name ist Kai, und wie lautet deiner?\"", true);
+                } else if (clickCount === 24) {
+                    addDialogue("Vanessa: \"Ich bin Vanessa, freut mich dich kennenzulernen.\"", false);
+                } else if (clickCount === 25) {
+                    addDialogue("Kai: \"Ganz meinerseits. Kann ich dir eine Frage stellen?\"", true);
+                } else if (clickCount === 26) {
+                    addDialogue("Vanessa: \"Äh, na klar.\"", false);
+                } else if (clickCount === 27) {
+                    addDialogue("Kai: \"Wollen wir erstmal gemeinsam unsere Reise fortsetzen? Einfach damit wir etwas stärker sind. Die Kreaturen, denen wir begegnen werden auch immer stärker.\"", true);
+                } else if (clickCount === 28) {
+                    addDialogue("Vanessa: \"Das wär super! Ich will dir nur kein Klotz am Bein sein. Aber das wär wirklich eine große Unterstützung.\"", false);
+                } else if (clickCount === 29) {
+                    addDialogue("Kai: \"Ach das mit dem Klotz am Bein wird schon nicht so sein. Zu zweit ist man immer besser dran. Heutzutage gehen eigentlich wirklich alle in Gruppen auf Reisen. Hauptsächlich weil es einfach sicherer ist.\"", true);
+                } else if (clickCount === 30) {
+                    addDialogue("Vanessa: \"Das stimmt wohl. Leider kannte ich niemanden aus diesem Land bevor ich meine Reise angefangen hab. Deshalb bin ich einfach alleine losgezogen.\"", false);
+                } else if (clickCount === 31) {
+                    addDialogue("Kai: \"Achso verstehe. Ich hoffe ich kann dir ein wenig helfen. Wobei ich mich jetzt auch nicht perfekt auskenne mit den Gegebenheiten dieses Landes. Kann es sein, dass dein Schwert mit Magie bedient werden muss.\"", true);
+                } else if (clickCount === 32) {
+                    addDialogue("Vanessa: \"Ich bin mir ziemlich sicher ja. Allerdings ist nichts passiert im Kampf vorhin. Mein Schwert hat gar keine Wirkung gezeigt gegen den Bären.\"", false);
+                } else if (clickCount === 33) {
+                    addDialogue("Kai: \"Magische Waffen zu verwenden ist etwas kompliziert. Vermutlich musst du erstmal einen Magie-Experten aufsuchen, der dir erklärt wie du an die magischen Kräfte deines Schwertes gelangst.\"", true);
+                } else if (clickCount === 34) {
+                    addDialogue("Vanessa: \"Das könnte schwierig werden, aber mal sehen. Sag mal, möchtest du heute noch etwas weiterreisen, oder wollen wir hier ein Lager aufschlagen und bis zum nächsten Tag warten?\"", false);
+                } else if (clickCount === 35) {
+                    addDialogue("Kai: \"Ich denke es macht kein Sinn mehr jetzt noch weiterzureisen. Machen wir hier unser Lager hin.\"", true);
+                } else if (clickCount === 36) {
+                    addDialogue("Vanessa: \"Okay!\"", false);
+                    body.addEventListener('click', function handleClick() {
+                        body.removeEventListener('click', handleClick);
+                        addText("Unsere Heldin und Kai entscheiden sich ihre Reise vorerst gemeinsam fortzusetzen und erstmal ihr Lager aufzuschlagen. Beide bauen Ihre Zelte auf und nehmen etwas von Ihrem Proviant. In der Nacht wechseln sich die beiden mit Schlafen ab, damit immer jemand Ausschau nach feindlichen Kreaturen hält. Allerdings bleiben sie verschont. Der nächste Tag beginnt und die beiden begeben sich wieder auf den Weg nachdem sie alles abgebaut haben. Nach einiger Zeit gelangen die beiden an eine Mauer mit einem Durchgang. Wieder versperrt eine magische Barriere den Weg. Sofort begibt sich unsere Heldin zum Sockel und analysiert was draufsteht. 'Errate das Wort mithilfe der 4 vorgegebenen Bilder.' Darunter befindet sich ein Passwortfeld, wo offensichtlich das Lösungswort reingeschrieben werden soll. Diesmal jedoch sieht man wie viele Buchstaben das Wort haben muss. Hierbei fällt unserer Heldin außerdem ein weiterer Vorteil des gemeinsamen Reisens auf: Die Rätsel lassen sich schneller lösen!");
+                    }, { once: true });
+                }
+            });
+
+            function addText(text) {
+                const storyTextElement = document.createElement('div');
+                storyTextElement.classList.add('story-text');
+                storyTextElement.textContent = text;
+                document.body.appendChild(storyTextElement);
+                setTimeout(() => {
+                    storyTextElement.style.opacity = 1;
+                }, 10); // Kurzer Delay für den Übergang
+            }
+
+            function addDialogue(text, isKai) {
+                const dialogueTextElement = document.createElement('div');
+                dialogueTextElement.classList.add('dialogue-text');
+                if (isKai) {
+                    dialogueTextElement.classList.add('kai');
+                }
+                dialogueTextElement.textContent = text;
+                document.body.appendChild(dialogueTextElement);
+                setTimeout(() => {
+                    dialogueTextElement.style.opacity = 1;
+                }, 10); // Kurzer Delay für den Übergang
+            }
+        });
+    </script>
+</body>
+
+</html>
+
