@@ -47,6 +47,35 @@
             opacity: 0;
             transition: opacity 1s ease-in-out;
         }
+
+        .answer-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .answer-input {
+            font-size: 1.5em;
+            padding: 10px;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .submit-button {
+            font-size: 1.5em;
+            padding: 10px 20px;
+            background-color: grey;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .feedback {
+            font-size: 1.5em;
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 </head>
 
@@ -83,6 +112,10 @@
                     addText("Vanessa: \"Danke (Na endlich)\"");
                 } else if (clickCount === 3) {
                     addText("Unsere Heldin durchtritt das Tor und verlässt damit die Stadt Marry Edge. Die Reise zum Schatz beginnt nun ganz offiziell. Und die bevorstehenden Herausforderungen werden noch viel spannender und fordernder als es sich unsere Heldin ausmalen kann.");
+                } else if (clickCount === 4) {
+                    addText("Vor dem Eingang zum Wald befindet sich ein steinernes Tor. Als unsere Heldin durchtreten will, wird Sie blockiert von einer unsichtbaren magischen Wand. Unsere Heldin versucht es erneut und erneut, allerdings kommt Sie einfach nicht durch die magische Blockade hindurch. Auch ihr Schwert versagt hier. Sie stellt jedoch fest, dass sich bei der rechten Säule ein Sockel befindet. In den Sockel lässt sich etwas eintippen. Möglicherweise wird die Barriere deaktiviert, wenn man etwas Bestimmtes eintippt. Nur was genau soll man denn eintippen? Unsere Heldin versucht es erstmal mit dem Codewort 'Rasuman', was an der Decke in der Besenkammer im Gasthof stand, jedoch tut sich nichts. Nach weiteren Untersuchungen der Umgebung kommt unsere Heldin auf keine weiteren Erkenntnisse. Gibt es vielleicht jemand, der dir hierbei helfen könnte?");
+                } else if (clickCount === 5) {
+                    showAnswerInput();
                 }
             });
 
@@ -94,6 +127,32 @@
                 setTimeout(() => {
                     storyTextElement.style.opacity = 1;
                 }, 10); // Kurzer Delay für den Übergang
+            }
+
+            function showAnswerInput() {
+                const answerContainer = document.createElement('div');
+                answerContainer.classList.add('answer-container');
+                answerContainer.innerHTML = `
+                    <input type="text" id="answer-input" class="answer-input" placeholder="Antwort eingeben...">
+                    <button id="submit-button" class="submit-button">Enter</button>
+                    <div id="feedback" class="feedback">Falsches Passwort</div>
+                `;
+                document.body.appendChild(answerContainer);
+                answerContainer.style.display = 'block';
+
+                document.getElementById('submit-button').addEventListener('click', checkAnswer);
+            }
+
+            function checkAnswer() {
+                const userAnswer = document.getElementById('answer-input').value.trim();
+                const feedback = document.getElementById('feedback');
+
+                if (userAnswer === 'JTGWVIOX') {
+                    feedback.style.display = 'none';
+                    window.location.href = 'Kapitel_2_2.html';
+                } else {
+                    feedback.style.display = 'block';
+                }
             }
         });
     </script>
